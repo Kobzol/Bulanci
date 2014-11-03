@@ -1,6 +1,6 @@
 package cz.kobzol.bulanci.model;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 /**
  * Represents objects that can collide with other objects.

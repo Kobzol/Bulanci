@@ -2,7 +2,7 @@ package cz.kobzol.bulanci.model;
 
 import com.badlogic.gdx.math.Vector2;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 /**
  * Represents objects with position.
