@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class Map implements IDrawable {
     private final String name;
-    private final Texture background;
+    private Texture background;
     private final Dimension dimension;
 
     public Map(String name, Texture background, Dimension dimension) {
@@ -30,5 +30,10 @@ public class Map implements IDrawable {
     @Override
     public void draw(Batch batch) {
         batch.draw(this.background, 0, 0);
+    }
+
+    @Override
+    public void setTexture(Texture texture) {
+        this.background = texture;
     }
 }

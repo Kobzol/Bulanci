@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import cz.kobzol.bulanci.model.GameObject;
+import cz.kobzol.bulanci.model.IDrawable;
 import cz.kobzol.bulanci.model.Shape;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,7 +58,7 @@ public class MapLoader {
                 Element element = (Element) node;
 
                 if (element.getTagName().equals("properties")) {
-                    this.parseMap(level, element);
+                    level.setMap(this.parseMap(element));
                 }
                 else if (element.getTagName().equals("objects")) {
                     this.parseObjects(level, element);
@@ -81,41 +83,33 @@ public class MapLoader {
                 Element element = (Element) node;
 
                 if (element.getTagName().equals("object")) {
-                    if (element.getAttribute("interface").equals("model.Shape")) {
-                        level.addObject(this.parseShape(element));
+                    GameObject object = (GameObject) this.createObject(element);
+
+                    for (String iface : element.getAttribute("interfaces").split(",")) {
+                        if (iface.equals("model.Shape")) {
+                            this.parseShape(object, element);
+                        }
+                        else if (iface.equals("model.IDrawable")) {
+                            this.parseIDrawable(object, element);
+                        }
                     }
+
+                    level.addObject(object);
                 }
             }
         }
     }
 
     /**
-     * Parses shape from DOM element. Expects attribute class and child nodes dimension and location.
+     * Parses an object from the given DOM element. Expects attribute class.
      * @param elementObject DOM element
+     * @return parsed Object or null if the instantiation was unsuccessful
      */
-    private Shape parseShape(Element elementObject) {
+    private Object createObject(Element elementObject) {
         try {
             Class<?> objectClass = Class.forName(MapLoader.CLASS_NAMESPACE + "." + elementObject.getAttribute("class"));
             Constructor<?> objectConstructor = objectClass.getConstructor(int.class);
-            Shape shape = (Shape) objectConstructor.newInstance(this.objectCounters++);
-
-            for (int i = 0; i < elementObject.getChildNodes().getLength(); i++)
-            {
-                Node node = elementObject.getChildNodes().item(i);
-
-                if (node instanceof Element) {
-                    Element element = (Element) node;
-
-                    if (element.getTagName().equals("dimension")) {
-                        shape.setDimension(this.parseDimension(element));
-                    }
-                    else if (element.getTagName().equals("location")) {
-                        shape.setPosition(this.parsePosition(element));
-                    }
-                }
-            }
-
-            return shape;
+            return objectConstructor.newInstance(this.objectCounters++);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -125,11 +119,57 @@ public class MapLoader {
     }
 
     /**
+     * Parses shape from DOM element. Expects child nodes dimension and location.
+     * @param object parsed object
+     * @param elementObject DOM element
+     */
+    private void parseShape(Object object, Element elementObject) {
+        Shape shape = (Shape) object;
+
+        for (int i = 0; i < elementObject.getChildNodes().getLength(); i++)
+        {
+            Node node = elementObject.getChildNodes().item(i);
+
+            if (node instanceof Element) {
+                Element element = (Element) node;
+
+                if (element.getTagName().equals("dimension")) {
+                    shape.setDimension(this.parseDimension(element));
+                }
+                else if (element.getTagName().equals("location")) {
+                    shape.setPosition(this.parsePosition(element));
+                }
+            }
+        }
+    }
+
+    /**
+     * Parses IDrawable from the given DOM element. Expects child node with tag texture.
+     * @param object parsed object
+     * @param elementObject DOM element
+     */
+    private void parseIDrawable(Object object, Element elementObject) {
+        IDrawable shape = (IDrawable) object;
+
+        for (int i = 0; i < elementObject.getChildNodes().getLength(); i++)
+        {
+            Node node = elementObject.getChildNodes().item(i);
+
+            if (node instanceof Element) {
+                Element element = (Element) node;
+
+                if (element.getTagName().equals("texture")) {
+                    shape.setTexture(this.assetManager.get(element.getAttribute("value"), Texture.class));
+                }
+            }
+        }
+    }
+
+    /**
      * Parses map from DOM element. Expects child nodes name, background, dimension.
-     * @param level level
      * @param elementProperties DOM element
      */
-    private void parseMap(Level level, Element elementProperties) {
+    private Map parseMap(Element elementProperties) {
         String name = "";
         Texture background = null;
         Dimension dimension = new Dimension(0, 0);
@@ -153,7 +193,7 @@ public class MapLoader {
             }
         }
 
-        level.setMap(new Map(name, background, dimension));
+        return new Map(name, background, dimension);
     }
 
     /**
