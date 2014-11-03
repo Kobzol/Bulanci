@@ -24,7 +24,7 @@ public interface IPositionable {
      * Sets the object's position.
      * @param position position
      */
-    void setPositionX(Vector2 position);
+    void setPosition(Vector2 position);
 
     /**
      * Set's the object's dimension.
