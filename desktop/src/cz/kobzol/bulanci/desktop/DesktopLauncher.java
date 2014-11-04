@@ -5,12 +5,26 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import cz.kobzol.bulanci.BulanciGame;
 
 public class DesktopLauncher {
+
 	public static void main (String[] arg) {
-        StartupForm f = new StartupForm();
-        f.setVisible(true);
+        DesktopLauncher launcher = new DesktopLauncher();
+        launcher.openGameLauncher();
 	}
 
-    public static void startGame()
+    public void openGameLauncher()
+    {
+        StartupForm form = new StartupForm();
+        form.setActionListener(new StartupForm.ActionListener() {
+            @Override
+            public void connect(StartupForm form, String address, String port, String nickname) {
+                form.addLog("Start hry");
+                startGame();
+            }
+        });
+        form.setVisible(true);
+    }
+
+    public void startGame()
     {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         new LwjglApplication(new BulanciGame(), config);

@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 
@@ -20,7 +21,7 @@ public class StartupForm extends JFrame {
     private ActionListener actionListener;
 
     public StartupForm() throws HeadlessException {
-        super("Připojte se k serveru");
+        this("Připojte se k serveru");
     }
 
     public StartupForm(String title) throws HeadlessException {
@@ -56,7 +57,21 @@ public class StartupForm extends JFrame {
      */
     protected boolean checkValidity()
     {
-        return this.portField.getText().matches("/\\d+/") && this.nicknameField.getText().matches("/[\\w\\d]+/");
+        boolean isOk = true;
+        System.out.println(this.portField.getText());
+        if (!this.portField.getText().matches("^\\d+$")) {
+            this.portField.setBackground(Color.red);
+            isOk = false;
+        } else {
+            this.portField.setBackground(Color.white);
+        }
+        if (!this.nicknameField.getText().matches("[\\w\\d]+")) {
+            this.nicknameField.setBackground(Color.red);
+            isOk = false;
+        } else {
+            this.nicknameField.setBackground(Color.white);
+        }
+        return isOk;
     }
 
     /**
@@ -90,8 +105,8 @@ public class StartupForm extends JFrame {
     /**
      * Listener is called by form, when is player ready, etc.
      */
-    abstract public class ActionListener {
-        abstract public void connect(StartupForm form, String address, String port, String nickname);
+    public interface ActionListener {
+        public void connect(StartupForm form, String address, String port, String nickname);
     }
 
 }
