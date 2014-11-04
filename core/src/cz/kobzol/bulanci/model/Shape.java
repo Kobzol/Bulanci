@@ -11,9 +11,7 @@ public abstract class Shape extends GameObject implements IPositionable  {
     private final Dimension dimension;
     private final Vector2 position;
 
-    public Shape(int id) {
-        super(id);
-
+    public Shape() {
         this.dimension = new Dimension();
         this.position = new Vector2(0, 0);
     }

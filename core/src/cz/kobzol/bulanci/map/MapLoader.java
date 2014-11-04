@@ -57,7 +57,7 @@ public class MapLoader {
             if (node instanceof Element) {
                 Element element = (Element) node;
 
-                if (element.getTagName().equals("properties")) {
+                if (element.getTagName().equals("map")) {
                     level.setMap(this.parseMap(element));
                 }
                 else if (element.getTagName().equals("objects")) {
@@ -85,6 +85,10 @@ public class MapLoader {
                 if (element.getTagName().equals("object")) {
                     GameObject object = (GameObject) this.createObject(element);
 
+                    if (element.hasAttribute("key")) {
+                        object.setKey(element.getAttribute("key"));
+                    }
+
                     for (String iface : element.getAttribute("interfaces").split(",")) {
                         if (iface.equals("model.Shape")) {
                             this.parseShape(object, element);
@@ -108,8 +112,8 @@ public class MapLoader {
     private Object createObject(Element elementObject) {
         try {
             Class<?> objectClass = Class.forName(MapLoader.CLASS_NAMESPACE + "." + elementObject.getAttribute("class"));
-            Constructor<?> objectConstructor = objectClass.getConstructor(int.class);
-            return objectConstructor.newInstance(this.objectCounters++);
+            Constructor<?> objectConstructor = objectClass.getConstructor();
+            return objectConstructor.newInstance();
         }
         catch (Exception e) {
             e.printStackTrace();

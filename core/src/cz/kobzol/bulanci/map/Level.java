@@ -36,6 +36,15 @@ public class Level {
 
         return null;
     }
+    public GameObject getObjectByKey(String key) {
+        for (GameObject object : this.objects) {
+            if (object.getKey().equals(key)) {
+                return object;
+            }
+        }
+
+        return null;
+    }
 
     public void addObject(GameObject object) {
         this.objects.add(object);
