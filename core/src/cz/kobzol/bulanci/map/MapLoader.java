@@ -26,7 +26,6 @@ public class MapLoader {
     private static String CLASS_NAMESPACE = "cz.kobzol.bulanci";
 
     private final AssetManager assetManager;
-    private int objectCounters = 0;
 
     public MapLoader(AssetManager assetManager) {
         this.assetManager = assetManager;
