@@ -1,6 +1,8 @@
 package cz.kobzol.bulanci.map;
 
 import cz.kobzol.bulanci.model.GameObject;
+import cz.kobzol.bulanci.model.IGameObject;
+import cz.kobzol.bulanci.model.ObjectManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +12,10 @@ import java.util.List;
  */
 public class Level {
     private Map map;
-    private final List<GameObject> objects;
+    private final ObjectManager<GameObject> objectManager;
 
     public Level() {
-        this.objects = new ArrayList<GameObject>();
+        this.objectManager = new ObjectManager<GameObject>();
     }
 
     public Map getMap() {
@@ -24,29 +26,25 @@ public class Level {
     }
 
     public List<GameObject> getObjects() {
-        return this.objects;
+        return this.objectManager.getObjects();
     }
 
     public GameObject getObjectById(int id) {
-        for (GameObject object : this.objects) {
-            if (object.getId() == id) {
-                return object;
-            }
-        }
-
-        return null;
+        return this.objectManager.getObjectById(id);
     }
     public GameObject getObjectByKey(String key) {
-        for (GameObject object : this.objects) {
-            if (object.getKey().equals(key)) {
-                return object;
-            }
-        }
-
-        return null;
+        return this.objectManager.getObjectByKey(key);
     }
 
     public void addObject(GameObject object) {
-        this.objects.add(object);
+        try {
+            this.objectManager.registerObject(object);
+        } catch (ObjectManager<GameObject>.ObjectAlreadyRegisteredException e) {
+            e.printStackTrace();
+        } catch (ObjectManager<GameObject>.AnotherObjectHasSameKeyException e) {
+            e.printStackTrace();
+        } catch (ObjectManager<GameObject>.AnotherObjectHasSameIdException e) {
+            e.printStackTrace();
+        }
     }
 }
