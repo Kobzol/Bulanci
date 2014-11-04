@@ -29,7 +29,7 @@ public class Level {
 
     public GameObject getObjectById(int id) {
         for (GameObject object : this.objects) {
-            if (object.getID() == id) {
+            if (object.getId() == id) {
                 return object;
             }
         }
