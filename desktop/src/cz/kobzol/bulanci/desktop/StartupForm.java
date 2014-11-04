@@ -35,7 +35,7 @@ public class StartupForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 if (!StartupForm.this.checkValidity()) {
-                    StartupForm.this.addLog("Port, nebo nickname není správný");
+                    StartupForm.this.addLog("Bud port není číslice nebo nickname je prázdný");
                     return;
                 }
 
@@ -95,7 +95,7 @@ public class StartupForm extends JFrame {
     public void setVisible(boolean b) {
 
         if (actionListener == null) {
-            throw new IllegalStateException("Before visible set first StartupForm::setDoConnectListener");
+            throw new IllegalStateException("Before set visible, register listener through StartupForm::setActionListener");
         }
 
         super.setVisible(b);
