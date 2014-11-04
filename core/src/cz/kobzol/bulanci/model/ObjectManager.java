@@ -22,24 +22,35 @@ public class ObjectManager<T extends IGameObject>
         this.listeners = new ArrayList<Listener>();
     }
 
+
     public void registerListener(Listener listener) {
         this.listeners.add(listener);
     }
 
-    public ArrayList<T> getObjects()
-    {
+
+    /**
+     * Return registered objects
+     */
+    public ArrayList<T> getObjects() {
         return new ArrayList<T>(this.objects);
     }
 
+
+    /**
+     * Find object by his id
+     * @param id
+     * @return return object by generic or {@code null}
+     */
     public T getObjectById(int id) {
         return objectsId.get(id);
     }
+
 
     /**
      * Find object by his key (key is no registered)
      * Implementation: If some object is renamed, ObjectManager try find them *only* based on new key (like foreach object).
      * @param key
-     * @return T|null
+     * @return return object by generic or {@code null}
      */
     public T getObjectByKey(String key) {
         if (objectsKey.containsKey(key)) {
@@ -59,6 +70,7 @@ public class ObjectManager<T extends IGameObject>
         }
         return null;
     }
+
 
     /**
      * Register new object (first) and call event (second)
