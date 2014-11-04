@@ -54,6 +54,14 @@ public class ObjectManager
         this.objects.add(object);
         this.objectsId.put(object.getId(), object);
         this.objectsKey.put(object.getKey(), object);
+
+        if (object instanceof RegisteredEventObject) {
+            ((RegisteredEventObject) object).onRegistered(this);
+        }
+        for (Listener listener : listeners) {
+            listener.onRegistered(this, object);
+        }
+
     }
 
     public void removeObject(IGameObject object) {
@@ -74,11 +82,28 @@ public class ObjectManager
     public interface Listener {
 
         /**
+         * When object is registered from Object manager, this is be called after is registered
+         * @param objectManager to added
+         * @param object which is added
+         */
+        public void onRegistered(ObjectManager objectManager, IGameObject object);
+
+        /**
          * When object is unregistered from Object manager, this is be called before real remove
          * @param objectManager from removed
          * @param object which is removed
          */
         public void onRemove(ObjectManager objectManager, IGameObject object);
+
+    }
+
+    public interface RegisteredEventObject {
+
+        /**
+         * When object is registered from Object manager, this is be called after is registered
+         * @param objectManager to added
+         */
+        public void onRegistered(ObjectManager objectManager);
 
     }
 
