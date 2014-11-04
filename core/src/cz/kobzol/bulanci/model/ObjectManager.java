@@ -168,7 +168,7 @@ public class ObjectManager<T extends IGameObject>
 
     /***** Exceptions *****/
 
-    private class ObjectRegistrationException extends Exception {
+    static private class ObjectRegistrationException extends Exception {
         private IGameObject registered;
         private IGameObject another;
 
@@ -187,17 +187,17 @@ public class ObjectManager<T extends IGameObject>
         }
     }
 
-    public class ObjectAlreadyRegisteredException extends ObjectRegistrationException {
+    static public class ObjectAlreadyRegisteredException extends ObjectRegistrationException {
         public ObjectAlreadyRegisteredException(IGameObject registered) {
             super(registered, registered, "Object is already registered in object manager");
         }
     }
-    public class AnotherObjectHasSameKeyException extends ObjectRegistrationException {
+    static public class AnotherObjectHasSameKeyException extends ObjectRegistrationException {
         public AnotherObjectHasSameKeyException(IGameObject registered, IGameObject another) {
             super(registered, another, "Game object with same key and not same instance want to register");
         }
     }
-    public class AnotherObjectHasSameIdException extends ObjectRegistrationException {
+    static public class AnotherObjectHasSameIdException extends ObjectRegistrationException {
         public AnotherObjectHasSameIdException(IGameObject registered, IGameObject another) {
             super(registered, another, "Game object with same id and not same instance want to register");
         }
