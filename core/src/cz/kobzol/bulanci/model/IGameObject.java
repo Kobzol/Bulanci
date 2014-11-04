@@ -3,12 +3,10 @@ package cz.kobzol.bulanci.model;
 
 public interface IGameObject {
 
-    public String getKey();
-
     public int getId();
 
-    public void setKey(String key);
+    public String getKey();
 
-    public void initialize();
+    public void setKey(String key);
 
 }

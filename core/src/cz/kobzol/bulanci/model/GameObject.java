@@ -5,8 +5,6 @@ package cz.kobzol.bulanci.model;
  */
 public abstract class GameObject implements IGameObject {
 
-    private final String UNNAMED_KEY_PREFIX = "gameobject_";
-
     private static int id_counter = 0;
 
     private final int id;
@@ -14,7 +12,11 @@ public abstract class GameObject implements IGameObject {
 
     public GameObject() {
         this.id = GameObject.id_counter++;
-        this.key = UNNAMED_KEY_PREFIX + this.id;
+    }
+
+    public GameObject(String key) {
+        this();
+        this.key = key;
     }
 
     final public int getId() {
@@ -28,10 +30,5 @@ public abstract class GameObject implements IGameObject {
     @Override
     public void setKey(String key) {
         this.key = key;
-    }
-
-    @Override
-    public void initialize() {
-
     }
 }
