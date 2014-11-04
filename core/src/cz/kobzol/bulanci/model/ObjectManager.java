@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ObjectManager
+public class ObjectManager<T extends IGameObject>
 {
 
-    protected List<IGameObject> objects;
+    protected List<T> objects;
 
-    protected HashMap<Integer, IGameObject> objectsId;
+    protected HashMap<Integer, T> objectsId;
 
-    protected HashMap<String, IGameObject> objectsKey;
+    protected HashMap<String, T> objectsKey;
 
     protected List<Listener> listeners;
 
     public ObjectManager() {
-        this.objects = new ArrayList<IGameObject>();
-        this.objectsId = new HashMap<Integer, IGameObject>();
-        this.objectsKey = new HashMap<String, IGameObject>();
+        this.objects = new ArrayList<T>();
+        this.objectsId = new HashMap<Integer, T>();
+        this.objectsKey = new HashMap<String, T>();
         this.listeners = new ArrayList<Listener>();
     }
 
@@ -26,12 +26,12 @@ public class ObjectManager
         this.listeners.add(listener);
     }
 
-    public ArrayList<IGameObject> getObjects()
+    public ArrayList<T> getObjects()
     {
-        return new ArrayList<IGameObject>(this.objects);
+        return new ArrayList<T>(this.objects);
     }
 
-    public IGameObject getObjectById(int id) {
+    public T getObjectById(int id) {
         return objectsId.get(id);
     }
 
@@ -39,11 +39,11 @@ public class ObjectManager
      * Find object by his key (key is no registered)
      * Implementation: If some object is renamed, ObjectManager try find them *only* based on new key (like foreach object).
      * @param key
-     * @return IGameObject|null
+     * @return T|null
      */
-    public IGameObject getObjectByKey(String key) {
+    public T getObjectByKey(String key) {
         if (objectsKey.containsKey(key)) {
-            IGameObject object = objectsKey.get(key);
+            T object = objectsKey.get(key);
             if (object.getKey().equals(key)) {
                 return object;
             } else {
@@ -51,7 +51,7 @@ public class ObjectManager
                 objectsKey.put(object.getKey(), object);
             }
         }
-        for (IGameObject object : objects) {
+        for (T object : objects) {
             if (object.getKey().equals(key)) {
                 objectsKey.put(object.getKey(), object);
                 return object;
@@ -65,7 +65,11 @@ public class ObjectManager
      * @param object
      * @throws ObjectRegistrationException
      */
-    public void registerObject(IGameObject object) throws ObjectRegistrationException {
+    public void registerObject(T object) throws
+            ObjectAlreadyRegisteredException,
+            AnotherObjectHasSameIdException,
+            AnotherObjectHasSameKeyException
+    {
         if (objectsId.containsKey(object.getId())) {
             if (objectsId.get(object.getId()) == object) {
                 throw new ObjectAlreadyRegisteredException(object);
@@ -95,7 +99,7 @@ public class ObjectManager
      * Unregister object (second), and call event (first)
      * @param object
      */
-    public void removeObject(IGameObject object) {
+    public void removeObject(T object) {
         for (Listener listener : listeners) {
             listener.onRemove(this, object);
         }
