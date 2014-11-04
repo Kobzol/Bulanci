@@ -6,7 +6,13 @@ import cz.kobzol.bulanci.BulanciGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new BulanciGame(), config);
+        StartupForm f = new StartupForm();
+        f.setVisible(true);
 	}
+
+    public static void startGame()
+    {
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        new LwjglApplication(new BulanciGame(), config);
+    }
 }
