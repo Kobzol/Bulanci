@@ -39,11 +39,11 @@ public class Level {
     public void addObject(GameObject object) {
         try {
             this.objectManager.registerObject(object);
-        } catch (ObjectManager<GameObject>.ObjectAlreadyRegisteredException e) {
+        } catch (ObjectManager.ObjectAlreadyRegisteredException e) {
             e.printStackTrace();
-        } catch (ObjectManager<GameObject>.AnotherObjectHasSameKeyException e) {
+        } catch (ObjectManager.AnotherObjectHasSameKeyException e) {
             e.printStackTrace();
-        } catch (ObjectManager<GameObject>.AnotherObjectHasSameIdException e) {
+        } catch (ObjectManager.AnotherObjectHasSameIdException e) {
             e.printStackTrace();
         }
     }
