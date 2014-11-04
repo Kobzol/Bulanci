@@ -3,9 +3,7 @@ package cz.kobzol.bulanci.model;
 /**
  * Represents game object with unique ID.
  */
-public abstract class GameObject {
-
-    private final String UNNAMED_KEY_PREFIX = "gameobject_";
+public abstract class GameObject implements IGameObject {
 
     private static int id_counter = 0;
 
@@ -14,17 +12,23 @@ public abstract class GameObject {
 
     public GameObject() {
         this.id = GameObject.id_counter++;
-        this.key = UNNAMED_KEY_PREFIX + this.id;
+    }
+
+    public GameObject(String key) {
+        this();
+        this.key = key;
+    }
+
+    final public int getId() {
+        return this.id;
     }
 
     public String getKey() {
         return this.key;
     }
+
+    @Override
     public void setKey(String key) {
         this.key = key;
-    }
-
-    public int getID() {
-        return this.id;
     }
 }
