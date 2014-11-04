@@ -35,10 +35,36 @@ public class ObjectManager
         return objectsId.get(id);
     }
 
+    /**
+     * Find object by his key (key is no registered)
+     * Implementation: If some object is renamed, ObjectManager try find them *only* based on new key (like foreach object).
+     * @param key
+     * @return IGameObject|null
+     */
     public IGameObject getObjectByKey(String key) {
-        return objectsKey.get(key);
+        if (objectsKey.containsKey(key)) {
+            IGameObject object = objectsKey.get(key);
+            if (object.getKey().equals(key)) {
+                return object;
+            } else {
+                objectsKey.remove(key);
+                objectsKey.put(object.getKey(), object);
+            }
+        }
+        for (IGameObject object : objects) {
+            if (object.getKey().equals(key)) {
+                objectsKey.put(object.getKey(), object);
+                return object;
+            }
+        }
+        return null;
     }
 
+    /**
+     * Register new object (first) and call event (second)
+     * @param object
+     * @throws ObjectRegistrationException
+     */
     public void registerObject(IGameObject object) throws ObjectRegistrationException {
         if (objectsId.containsKey(object.getId())) {
             if (objectsId.get(object.getId()) == object) {
@@ -64,6 +90,11 @@ public class ObjectManager
 
     }
 
+
+    /**
+     * Unregister object (second), and call event (first)
+     * @param object
+     */
     public void removeObject(IGameObject object) {
         for (Listener listener : listeners) {
             listener.onRemove(this, object);
