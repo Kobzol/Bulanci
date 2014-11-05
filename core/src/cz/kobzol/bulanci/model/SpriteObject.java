@@ -39,8 +39,10 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     @Override
     public void setTexture(Texture texture) {
         super.setTexture(texture);
-        this.sprite = new Sprite(texture);  // TODO: pass the old sprite parameters (position, rotation, etc.) to the new sprite
-        this.sprite.setOriginCenter();
+
+        this.sprite.setTexture(texture);
+        this.sprite.setRegion(texture);
+        this.setDimension(new Dimension(texture.getWidth(), texture.getHeight()));
 
         this.setDirty();
     }
