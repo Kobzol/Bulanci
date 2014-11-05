@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import java.awt.Dimension;
+
 /**
  * Represents Bulanek.
  */
@@ -36,8 +38,19 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     }
 
     @Override
+    public void setDimension(Dimension dimension) {
+        super.setDimension(dimension);
+
+        this.sprite.setBounds(this.sprite.getX(), this.sprite.getY(), (float) dimension.getWidth(), (float) dimension.getHeight());
+        this.sprite.setOrigin((float) dimension.getWidth() / 2.0f, (float) dimension.getHeight() / 2.0f);
+    }
+
+    @Override
     public void draw(Batch batch) {
-        this.sprite.draw(batch);
+        batch.draw(this.sprite, this.sprite.getX(), this.sprite.getY(),
+                   this.sprite.getOriginX(), this.sprite.getOriginX(),
+                   this.sprite.getWidth(), this.sprite.getHeight(),
+                   this.sprite.getScaleX(), this.sprite.getScaleY(), this.sprite.getRotation());
     }
 
     @Override
