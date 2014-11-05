@@ -11,4 +11,10 @@ public interface ITexturable {
      * @param texture texture
      */
     void setTexture(Texture texture);
+
+    /**
+     * Return's the object's texture.
+     * @return texture
+     */
+    Texture getTexture();
 }
