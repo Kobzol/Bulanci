@@ -18,7 +18,7 @@ public class EchoCommand implements ICommand {
         return new Serializable(this.text);
     }
 
-    public class Serializable extends SerializableCommand {
+    public static class Serializable extends SerializableCommand {
         public String text;
 
         public Serializable(String text) {
