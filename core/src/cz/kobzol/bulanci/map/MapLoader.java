@@ -171,6 +171,7 @@ public class MapLoader {
         this.parseShape(object, elementObject);
 
         spriteObject.setSpeed(this.parseSpeed(elementObject));
+        spriteObject.setRotation(this.parseRotation(elementObject));
     }
 
     /**
@@ -259,6 +260,21 @@ public class MapLoader {
      */
     private float parseSpeed(Element element) {
         element = this.getElementOrChild(element, "speed");
+
+        if (element == null) {
+            return 0.0f;
+        }
+
+        return Float.parseFloat(element.getAttribute("value"));
+    }
+
+    /**
+     * Parses rotation in degrees from DOM element.
+     * @param element DOM element
+     * @return rotation in degrees or 0 if the element did not contain rotation
+     */
+    private float parseRotation(Element element) {
+        element = this.getElementOrChild(element, "rotation");
 
         if (element == null) {
             return 0.0f;

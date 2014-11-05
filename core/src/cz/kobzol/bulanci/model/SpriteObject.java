@@ -32,6 +32,9 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
         this.speed = speed;
     }
 
+    public boolean isDirty() {
+        return this.dirty;
+    }
     private void setDirty() {
         this.dirty = true;
     }
@@ -58,8 +61,15 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     }
 
     @Override
+    public void setPosition(Vector2 position) {
+        super.setPosition(position);
+        this.sprite.setPosition(position.x, position.y);
+
+        this.setDirty();
+    }
+
+    @Override
     public void draw(Batch batch) {
-        if (this.dirty) {
             batch.draw(
                     this.sprite, this.sprite.getX(), this.sprite.getY(),
                     this.sprite.getOriginX(), this.sprite.getOriginX(),
@@ -67,7 +77,6 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
                     this.sprite.getScaleX(), this.sprite.getScaleY(), this.sprite.getRotation());
 
             this.dirty = false;
-        }
     }
 
     @Override
@@ -83,19 +92,16 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     }
 
     @Override
-    public void setPosition(Vector2 position) {
-        super.setPosition(position);
-        this.sprite.setPosition(position.x, position.y);
+    public void setRotation(float angle) {
+        this.direction.setAngle(angle);
+        this.sprite.setRotation(this.direction.angle());
 
         this.setDirty();
     }
 
     @Override
     public void rotate(float angle) {
-        this.direction.setAngle(this.direction.angle() + angle);
-        this.sprite.setRotation(this.direction.angle());
-
-        this.setDirty();
+        this.setRotation(this.getRotation() + angle);
     }
 
     @Override
