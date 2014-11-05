@@ -5,7 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import cz.kobzol.bulanci.model.GameObject;
-import cz.kobzol.bulanci.model.IDrawable;
+import cz.kobzol.bulanci.model.ITexturable;
 import cz.kobzol.bulanci.model.Shape;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -92,8 +92,8 @@ public class MapLoader {
                         if (iface.equals("model.Shape")) {
                             this.parseShape(object, element);
                         }
-                        else if (iface.equals("model.IDrawable")) {
-                            this.parseIDrawable(object, element);
+                        else if (iface.equals("model.ITexturable")) {
+                            this.parseITexturable(object, element);
                         }
                     }
 
@@ -151,8 +151,8 @@ public class MapLoader {
      * @param object parsed object
      * @param elementObject DOM element
      */
-    private void parseIDrawable(Object object, Element elementObject) {
-        IDrawable shape = (IDrawable) object;
+    private void parseITexturable(Object object, Element elementObject) {
+        ITexturable shape = (ITexturable) object;
 
         for (int i = 0; i < elementObject.getChildNodes().getLength(); i++)
         {

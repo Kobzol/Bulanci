@@ -31,9 +31,4 @@ public class Map implements IDrawable {
     public void draw(Batch batch) {
         batch.draw(this.background, 0, 0);
     }
-
-    @Override
-    public void setTexture(Texture texture) {
-        this.background = texture;
-    }
 }
