@@ -1,6 +1,6 @@
 package cz.kobzol.bulanci.model;
 
-import java.awt.Rectangle;
+import com.badlogic.gdx.math.Rectangle;
 
 /**
  * Represents objects that can collide with other objects.
