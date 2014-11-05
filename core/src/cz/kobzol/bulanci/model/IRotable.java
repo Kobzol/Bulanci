@@ -11,6 +11,12 @@ public interface IRotable {
     float getRotation();
 
     /**
+     * Set's the object's rotation in degrees.
+     * @param angle angle in degrees
+     */
+    void setRotation(float angle);
+
+    /**
      * Rotates the object with the given angle in degrees.
      * @param angle rotation in degrees
      */

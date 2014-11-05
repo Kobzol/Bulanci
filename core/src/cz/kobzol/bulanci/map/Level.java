@@ -1,8 +1,8 @@
 package cz.kobzol.bulanci.map;
 
 import cz.kobzol.bulanci.model.GameObject;
-import cz.kobzol.bulanci.model.IGameObject;
 import cz.kobzol.bulanci.model.ObjectManager;
+import cz.kobzol.bulanci.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,11 @@ import java.util.List;
 public class Level {
     private Map map;
     private final ObjectManager<GameObject> objectManager;
+    private final List<Player> players;
 
     public Level() {
         this.objectManager = new ObjectManager<GameObject>();
+        this.players = new ArrayList<Player>();
     }
 
     public Map getMap() {
@@ -46,5 +48,23 @@ public class Level {
         } catch (ObjectManager.AnotherObjectHasSameIdException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Player> getPlayers() {
+        return new ArrayList<Player>(this.players);
+    }
+
+    public Player getPlayerById(int id) {
+        for (Player player : this.players) {
+            if (player.getId() == id) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
     }
 }

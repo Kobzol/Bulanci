@@ -21,6 +21,12 @@ public interface IPositionable {
     float getPositionY();
 
     /**
+     * Get's the object's position.
+     * @return position
+     */
+    Vector2 getPosition();
+
+    /**
      * Sets the object's position.
      * @param position position
      */

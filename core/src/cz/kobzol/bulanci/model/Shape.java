@@ -37,6 +37,11 @@ public abstract class Shape extends GameObject implements IPositionable  {
     }
 
     @Override
+    public Vector2 getPosition() {
+        return this.position;
+    }
+
+    @Override
     public void setPosition(Vector2 position) {
         this.position.set(position);
     }

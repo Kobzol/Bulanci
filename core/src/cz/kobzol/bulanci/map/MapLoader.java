@@ -5,8 +5,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import cz.kobzol.bulanci.model.GameObject;
-import cz.kobzol.bulanci.model.IDrawable;
+import cz.kobzol.bulanci.model.ITexturable;
 import cz.kobzol.bulanci.model.Shape;
+import cz.kobzol.bulanci.model.SpriteObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -74,8 +75,7 @@ public class MapLoader {
      * @param elementObjects DOM element
      */
     private void parseObjects(Level level, Element elementObjects) {
-        for (int i = 0; i < elementObjects.getChildNodes().getLength(); i++)
-        {
+        for (int i = 0; i < elementObjects.getChildNodes().getLength(); i++) {
             Node node = elementObjects.getChildNodes().item(i);
 
             if (node instanceof Element) {
@@ -92,8 +92,11 @@ public class MapLoader {
                         if (iface.equals("model.Shape")) {
                             this.parseShape(object, element);
                         }
-                        else if (iface.equals("model.IDrawable")) {
-                            this.parseIDrawable(object, element);
+                        else if (iface.equals("model.ITexturable")) {
+                            this.parseITexturable(object, element);
+                        }
+                        else if (iface.equals("model.SpriteObject")) {
+                            this.parseSpriteObject(object, element);
                         }
                     }
 
@@ -129,20 +132,15 @@ public class MapLoader {
     private void parseShape(Object object, Element elementObject) {
         Shape shape = (Shape) object;
 
-        for (int i = 0; i < elementObject.getChildNodes().getLength(); i++)
-        {
-            Node node = elementObject.getChildNodes().item(i);
+        Dimension dimension = this.parseDimension(elementObject);
+        Vector2 position = this.parsePosition(elementObject);
 
-            if (node instanceof Element) {
-                Element element = (Element) node;
+        if (dimension != null) {
+            shape.setDimension(dimension);
+        }
 
-                if (element.getTagName().equals("dimension")) {
-                    shape.setDimension(this.parseDimension(element));
-                }
-                else if (element.getTagName().equals("location")) {
-                    shape.setPosition(this.parsePosition(element));
-                }
-            }
+        if (position != null) {
+            shape.setPosition(position);
         }
     }
 
@@ -151,21 +149,29 @@ public class MapLoader {
      * @param object parsed object
      * @param elementObject DOM element
      */
-    private void parseIDrawable(Object object, Element elementObject) {
-        IDrawable shape = (IDrawable) object;
+    private void parseITexturable(Object object, Element elementObject) {
+        ITexturable shape = (ITexturable) object;
 
-        for (int i = 0; i < elementObject.getChildNodes().getLength(); i++)
-        {
-            Node node = elementObject.getChildNodes().item(i);
+        Texture texture = this.parseTexture(elementObject);
 
-            if (node instanceof Element) {
-                Element element = (Element) node;
-
-                if (element.getTagName().equals("texture")) {
-                    shape.setTexture(this.assetManager.get(element.getAttribute("value"), Texture.class));
-                }
-            }
+        if (texture != null) {
+            shape.setTexture(texture);
         }
+    }
+
+    /**
+     * Parses SpriteObject.
+     * @param object GameObject
+     * @param elementObject DOM element
+     */
+    private void parseSpriteObject(Object object, Element elementObject) {
+        SpriteObject spriteObject = (SpriteObject) object;
+
+        this.parseITexturable(object, elementObject);
+        this.parseShape(object, elementObject);
+
+        spriteObject.setSpeed(this.parseSpeed(elementObject));
+        spriteObject.setRotation(this.parseRotation(elementObject));
     }
 
     /**
@@ -200,11 +206,32 @@ public class MapLoader {
     }
 
     /**
+     * Parses Texture from DOM element. Expects attribute value (the location of the texture).
+     * @param element DOM element
+     * @return texture
+     */
+    private Texture parseTexture(Element element) {
+        element = this.getElementOrChild(element, "texture");
+
+        if (element == null) {
+            return null;
+        }
+
+        return this.assetManager.get(element.getAttribute("value"), Texture.class);
+    }
+
+    /**
      * Parses Vector2 (position) from DOM element. Expects double attributes x and y.
      * @param element DOM element
      * @return vector2 (position)
      */
     private Vector2 parsePosition(Element element) {
+        element = this.getElementOrChild(element, "position");
+
+        if (element == null) {
+            return null;
+        }
+
         return new Vector2(Float.parseFloat(element.getAttribute("x")), Float.parseFloat(element.getAttribute("y")));
     }
 
@@ -214,10 +241,46 @@ public class MapLoader {
      * @return dimension
      */
     private Dimension parseDimension(Element element) {
+        element = this.getElementOrChild(element, "dimension");
+
+        if (element == null) {
+            return null;
+        }
+
         Dimension dimension = new Dimension();
         dimension.setSize(Double.parseDouble(element.getAttribute("width")), Double.parseDouble(element.getAttribute("height")));
 
         return dimension;
+    }
+
+    /**
+     * Parses speed from the DOM element.
+     * @param element DOM element
+     * @return speed or 0 if the element did not contain speed
+     */
+    private float parseSpeed(Element element) {
+        element = this.getElementOrChild(element, "speed");
+
+        if (element == null) {
+            return 0.0f;
+        }
+
+        return Float.parseFloat(element.getAttribute("value"));
+    }
+
+    /**
+     * Parses rotation in degrees from DOM element.
+     * @param element DOM element
+     * @return rotation in degrees or 0 if the element did not contain rotation
+     */
+    private float parseRotation(Element element) {
+        element = this.getElementOrChild(element, "rotation");
+
+        if (element == null) {
+            return 0.0f;
+        }
+
+        return Float.parseFloat(element.getAttribute("value"));
     }
 
     /**
@@ -238,5 +301,44 @@ public class MapLoader {
         catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Get the element if it's tag matches the given tag or try to find his child with given tag.
+     * @param element element
+     * @param tagName tag name
+     * @return given element, his child or null if no tag with the given tag name was found
+     */
+    private Element getElementOrChild(Element element, String tagName) {
+        Element foundElement = null;
+
+        if (!element.getTagName().equals(tagName)) {
+            Element childElement = this.findElementChild(element, tagName);
+
+            if (childElement != null) {
+                foundElement = childElement;
+            }
+        }
+        else foundElement = element;
+
+        return foundElement;
+    }
+
+    /**
+     * Find child element of the given element with the given tag name.
+     * @param parentElement parent element
+     * @param tagName tag name of child element
+     * @return found child element or null
+     */
+    private Element findElementChild(Element parentElement, String tagName) {
+        for (int i = 0; i < parentElement.getChildNodes().getLength(); i++) {
+            Node node = parentElement.getChildNodes().item(i);
+
+            if (node instanceof Element && ((Element) node).getTagName().equals(tagName)) {
+                return (Element) node;
+            }
+        }
+
+        return null;
     }
 }
