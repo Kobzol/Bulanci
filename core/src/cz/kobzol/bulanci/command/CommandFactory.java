@@ -10,7 +10,7 @@ public class CommandFactory {
         this.level = level;
     }
 
-    public ICommand build(ISignatureCommand command) throws UnknownCommand {
+    public ICommand build(ISignatureCommand command) throws UnknownCommandException {
         if (command instanceof EchoCommand.Signature) {
             EchoCommand.Signature serializable = (EchoCommand.Signature) command;
             return new EchoCommand(serializable.text);
@@ -20,13 +20,13 @@ public class CommandFactory {
             return new RotateCommand(level.getPlayerById(this.localPlayerId), serializable.rotateRight);
         }
 
-        throw new UnknownCommand(command);
+        throw new UnknownCommandException(command);
     }
 
-    public class UnknownCommand extends Exception {
+    public class UnknownCommandException extends Exception {
         private ISignatureCommand command;
 
-        public UnknownCommand(ISignatureCommand command) {
+        public UnknownCommandException(ISignatureCommand command) {
             super();
             this.command = command;
         }

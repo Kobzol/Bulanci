@@ -37,8 +37,8 @@ public class PlayerInputHandler {
             RotateCommand command = (RotateCommand) this.commandFactory.build(serializedCommand);
             this.commandInvoker.invokeCommand(command);
         }
-        catch (CommandFactory.UnknownCommand unknownCommandException) {
-            unknownCommandException.printStackTrace();
+        catch (CommandFactory.UnknownCommandException e) {
+            e.printStackTrace();
         }
     }
 }
