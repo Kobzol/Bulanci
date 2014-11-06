@@ -14,14 +14,14 @@ public class EchoCommand implements ICommand {
     }
 
     @Override
-    public ISerializableCommand getSeriliaziableCommand() {
-        return new Serializable(this.text);
+    public ISignatureCommand getSignatureCommand() {
+        return new Signature(this.text);
     }
 
-    public static class Serializable extends SerializableCommand {
+    public static class Signature extends SignatureCommand {
         public String text;
 
-        public Serializable(String text) {
+        public Signature(String text) {
             this.text = text;
         }
     }

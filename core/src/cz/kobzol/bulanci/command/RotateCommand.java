@@ -6,10 +6,11 @@ import cz.kobzol.bulanci.player.Player;
  * Rotate's the player's object.
  */
 public class RotateCommand implements ICommand {
-    public static class Serializable extends SerializableCommand {
+    public static class Signature extends SignatureCommand {
+
         public final boolean rotateRight;
 
-        public Serializable(boolean rotateRight) {
+        public Signature(boolean rotateRight) {
             this.rotateRight = rotateRight;
         }
     }
@@ -28,7 +29,7 @@ public class RotateCommand implements ICommand {
     }
 
     @Override
-    public ISerializableCommand getSeriliaziableCommand() {
-        return new Serializable(this.rotateRight);
+    public ISignatureCommand getSignatureCommand() {
+        return new Signature(this.rotateRight);
     }
 }

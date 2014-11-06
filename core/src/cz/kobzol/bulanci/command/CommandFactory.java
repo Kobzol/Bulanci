@@ -3,21 +3,20 @@ package cz.kobzol.bulanci.command;
 import cz.kobzol.bulanci.map.Level;
 
 public class CommandFactory {
-    private final Level level;
-    private final int localPlayerId;
 
-    public CommandFactory(Level level, int localPlayerId){
+    private final Level level;
+
+    public CommandFactory(Level level){
         this.level = level;
-        this.localPlayerId = localPlayerId;
     }
 
-    public ICommand build(ISerializableCommand command) throws UnknownCommand {
-        if (command instanceof EchoCommand.Serializable) {
-            EchoCommand.Serializable serializable = (EchoCommand.Serializable) command;
+    public ICommand build(ISignatureCommand command) throws UnknownCommand {
+        if (command instanceof EchoCommand.Signature) {
+            EchoCommand.Signature serializable = (EchoCommand.Signature) command;
             return new EchoCommand(serializable.text);
-        }
-        else if (command instanceof RotateCommand.Serializable) {
-            RotateCommand.Serializable serializable = (RotateCommand.Serializable) command;
+
+        } else if (command instanceof RotateCommand.Signature) {
+            RotateCommand.Signature serializable = (RotateCommand.Signature) command;
             return new RotateCommand(level.getPlayerById(this.localPlayerId), serializable.rotateRight);
         }
 
@@ -25,14 +24,14 @@ public class CommandFactory {
     }
 
     public class UnknownCommand extends Exception {
-        private ISerializableCommand command;
+        private ISignatureCommand command;
 
-        public UnknownCommand(ISerializableCommand command) {
+        public UnknownCommand(ISignatureCommand command) {
             super();
             this.command = command;
         }
 
-        public ISerializableCommand getCommand() {
+        public ISignatureCommand getCommand() {
             return command;
         }
     }
