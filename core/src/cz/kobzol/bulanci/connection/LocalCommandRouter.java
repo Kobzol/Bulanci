@@ -1,7 +1,6 @@
 package cz.kobzol.bulanci.connection;
 
 
-import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import cz.kobzol.bulanci.command.CommandFactory;
@@ -54,7 +53,7 @@ public class LocalCommandRouter implements ICommandInvoker {
         checkConnection();
         ISignatureCommand signature = command.getSignatureCommand();
         signature.setClientId(this.clientId);
-        connection.sendTCP(signature);
+        connection.sendCommand(command);
         this.localInvoker.invokeCommand(command);
     }
 
@@ -66,7 +65,7 @@ public class LocalCommandRouter implements ICommandInvoker {
     public void executeSignature(ISignatureCommand signature) {
         checkConnection();
         signature.setClientId(this.clientId);
-        connection.sendTCP(signature);
+        connection.sendCommandSignature(signature);
         this.acceptSignature(signature);
     }
 
