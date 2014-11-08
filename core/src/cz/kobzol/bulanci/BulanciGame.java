@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import cz.kobzol.bulanci.command.CommandFactory;
 import cz.kobzol.bulanci.command.CommandInvoker;
+import cz.kobzol.bulanci.connection.Client;
+import cz.kobzol.bulanci.connection.LocalCommandRouter;
 import cz.kobzol.bulanci.input.PlayerInputHandler;
 import cz.kobzol.bulanci.map.Level;
 import cz.kobzol.bulanci.map.MapLoader;
@@ -21,7 +23,7 @@ public class BulanciGame extends ApplicationAdapter {
     private Level level;
     private AssetManager assetManager;
     private OrthographicCamera camera;
-    private CommandFactory commandFactory;
+    private LocalCommandRouter localCommandRouter;
     private CommandInvoker commandInvoker = new CommandInvoker();
     private PlayerInputHandler inputHandler;
 	
@@ -38,8 +40,9 @@ public class BulanciGame extends ApplicationAdapter {
         this.level.addPlayer(localPlayer);
 
         this.camera = this.createCamera();
-        this.commandFactory = new CommandFactory(this.level);
-        this.inputHandler = new PlayerInputHandler(this.commandFactory, this.commandInvoker);
+        this.localCommandRouter = new LocalCommandRouter(new CommandFactory(this.level), this.commandInvoker);
+        this.localCommandRouter.setClientId(new Client(), 1);
+        this.inputHandler = new PlayerInputHandler(this.localCommandRouter);
 	}
 
     /**

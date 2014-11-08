@@ -1,21 +1,18 @@
 package cz.kobzol.bulanci.input;
 
 import com.badlogic.gdx.Input;
-import cz.kobzol.bulanci.command.CommandFactory;
-import cz.kobzol.bulanci.command.ICommandInvoker;
 import cz.kobzol.bulanci.command.MoveCommand;
 import cz.kobzol.bulanci.command.RotateCommand;
+import cz.kobzol.bulanci.connection.LocalCommandRouter;
 
 /**
  * Handles player's input.
  */
 public class PlayerInputHandler {
-    private final CommandFactory commandFactory;
-    private final ICommandInvoker commandInvoker;
+    private final LocalCommandRouter localCommandRouter;
 
-    public PlayerInputHandler(CommandFactory commandFactory, ICommandInvoker commandInvoker) {
-        this.commandFactory = commandFactory;
-        this.commandInvoker = commandInvoker;
+    public PlayerInputHandler(LocalCommandRouter localCommandRouter) {
+        this.localCommandRouter = localCommandRouter;
     }
 
     /**
@@ -40,25 +37,11 @@ public class PlayerInputHandler {
 
     private void generateRotation(boolean rotateRight) {
         RotateCommand.Signature serializedCommand = new RotateCommand.Signature(rotateRight);
-
-        try {
-            RotateCommand command = (RotateCommand) this.commandFactory.build(serializedCommand);
-            this.commandInvoker.invokeCommand(command);
-        }
-        catch (CommandFactory.UnknownCommandException e) {
-            e.printStackTrace();
-        }
+        this.localCommandRouter.executeSignature(serializedCommand);
     }
 
     private void generateMove(boolean forward) {
         MoveCommand.Signature serializedCommand = new MoveCommand.Signature(forward);
-
-        try {
-            MoveCommand command = (MoveCommand) this.commandFactory.build(serializedCommand);
-            this.commandInvoker.invokeCommand(command);
-        }
-        catch (CommandFactory.UnknownCommandException e) {
-            e.printStackTrace();
-        }
+        this.localCommandRouter.executeSignature(serializedCommand);
     }
 }
