@@ -29,7 +29,7 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java"
-
+    apply plugin: "idea"
 
     dependencies {
         compile project(":core")
@@ -41,12 +41,14 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
+        compile 'com.intellij:forms_rt:6.0.5'
+        compile fileTree(dir: '../lib', include: '*.jar')
     }
 }
 
 project(":core") {
     apply plugin: "java"
-
+    apply plugin: "idea"
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -57,6 +59,7 @@ project(":core") {
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        compile fileTree(dir: '../lib', include: '*.jar')
     }
 }
 
