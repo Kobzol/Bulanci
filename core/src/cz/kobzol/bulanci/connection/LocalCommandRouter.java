@@ -2,7 +2,6 @@ package cz.kobzol.bulanci.connection;
 
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import cz.kobzol.bulanci.command.CommandFactory;
 import cz.kobzol.bulanci.command.ICommand;
 import cz.kobzol.bulanci.command.ICommandInvoker;
@@ -17,7 +16,7 @@ public class LocalCommandRouter implements ICommandInvoker {
 
     ICommandInvoker localInvoker;
 
-    Client connection;
+    ConnectionSide connection;
 
     protected Integer clientId;
 
@@ -31,15 +30,16 @@ public class LocalCommandRouter implements ICommandInvoker {
      * If this is a local player, it must be set!
      * @param clientId
      */
-    public void setClientId(Client connection, int clientId) {
+    public void setClientId(ConnectionSide connection, int clientId) {
         this.clientId = clientId;
         this.connection = connection;
 
-        connection.addListener(new Listener() {
-            public void received(Connection connection, Object object) {
+        connection.addListener(new ConnectionSide.Response() {
+            public Object received(Connection connection, Object object) {
                 if (object instanceof ISignatureCommand) {
                     LocalCommandRouter.this.acceptSignature((ISignatureCommand) object);
                 }
+                return null;
             }
         });
     }
@@ -53,7 +53,7 @@ public class LocalCommandRouter implements ICommandInvoker {
         checkConnection();
         ISignatureCommand signature = command.getSignatureCommand();
         signature.setClientId(this.clientId);
-        connection.sendCommand(command);
+        connection.send(signature);
         this.localInvoker.invokeCommand(command);
     }
 
@@ -65,7 +65,7 @@ public class LocalCommandRouter implements ICommandInvoker {
     public void executeSignature(ISignatureCommand signature) {
         checkConnection();
         signature.setClientId(this.clientId);
-        connection.sendCommandSignature(signature);
+        connection.send(signature);
         this.acceptSignature(signature);
     }
 
