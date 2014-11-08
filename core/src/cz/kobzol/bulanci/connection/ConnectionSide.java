@@ -3,6 +3,7 @@ package cz.kobzol.bulanci.connection;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -19,35 +20,35 @@ public class ConnectionSide {
     protected HashMap<String, Response> waiting;
 
     public ConnectionSide(Connection connection) {
+        this.listener = new ArrayList<Response>();
+        this.waiting = new HashMap<String, Response>();
         this.connection = connection;
-        this.connection.addListener(new Listener() {
-            @Override
-            public void received(Connection connection, Object o) {
-                if (o instanceof DataPackage) {
-                    DataPackage dp = (DataPackage) o;
-                    if (dp.isResponse() && waiting.containsKey(dp.getPackageId())) { // is (waiting) response
-                        waiting.get(dp.getPackageId()).received(connection, dp.getData());
-                        waiting.remove(dp.getPackageId());
-                    } else if (dp.isRequest()) {
-                        for (Response response : listener) {
-                            Object responseObject = response.received(connection, o);
-                            if (dp.isResponsible() && responseObject != null) {
-                                DataPackage responsePackage = new DataPackage(responseObject, dp.getPackageId(), DataPackage.Type.RESPONSE);
-                                connection.sendTCP(responsePackage);
-                            }
-                        }
-                    }
-                } else {
-                    for (Response response : listener) {
-                        response.received(connection, o);
+    }
+
+    public void received(Connection connection, Object o) {
+        if (o instanceof DataPackage) {
+            DataPackage dp = (DataPackage) o;
+            if (dp.isResponse() && waiting.containsKey(dp.getPackageId())) { // is (waiting) response
+                waiting.get(dp.getPackageId()).received(connection, dp.getData());
+                waiting.remove(dp.getPackageId());
+            } else if (dp.isRequest()) {
+                for (Response response : listener) {
+                    Object responseObject = response.received(connection, dp.getData());
+                    if (dp.isResponsible() && responseObject != null) {
+                        DataPackage responsePackage = new DataPackage(responseObject, dp.getPackageId(), true);
+                        ConnectionSide.this.connection.sendTCP(responsePackage);
                     }
                 }
             }
-        });
+        } else {
+            for (Response response : listener) {
+                response.received(connection, o);
+            }
+        }
     }
 
     public synchronized void send(Object object, Response response) {
-        DataPackage dp = new DataPackage(object, this.generateId(), DataPackage.Type.REQUEST);
+        DataPackage dp = new DataPackage(object, this.generateId(), false);
         this.waiting.put(dp.packageId, response);
         connection.sendTCP(dp);
     }
@@ -55,6 +56,13 @@ public class ConnectionSide {
     public synchronized void send(Object object) {
         DataPackage dp = new DataPackage(object);
         connection.sendTCP(dp);
+    }
+
+    public void destroy()
+    {
+        this.waiting.clear();
+        this.listener.clear();
+        this.connection = null;
     }
 
     public void addListener(Response listener) {

@@ -1,25 +1,27 @@
 package cz.kobzol.bulanci.connection;
 
+/**
+ * INTERNAL! DO NOT USE, it is public for Kryonet library registration class
+ */
 public class DataPackage {
 
-    enum Type {
-        REQUEST, RESPONSE
-    }
 
-    protected Type type;
+    protected boolean isResponse;
 
     protected String packageId;
 
     protected Object data;
 
+    public DataPackage() {
+    }
 
     /**
      * Data package which is response or request
      */
-    public DataPackage(Object data, String packageId, Type type) {
+    public DataPackage(Object data, String packageId, boolean isResponse) {
         this.data = data;
         this.packageId = packageId;
-        this.type = type;
+        this.isResponse = isResponse;
     }
 
 
@@ -29,10 +31,6 @@ public class DataPackage {
      */
     public DataPackage(Object data) {
         this.data = data;
-    }
-
-    public Type getType() {
-        return type;
     }
 
     /**
@@ -48,18 +46,18 @@ public class DataPackage {
 
     public boolean isRequest()
     {
-        return type == Type.RESPONSE;
+        return !isResponse;
     }
 
     public boolean isResponse()
     {
-        return type == Type.RESPONSE;
+        return isResponse;
     }
 
     /**
      * Waiting for response
      */
     public boolean isResponsible() {
-        return packageId != null && type == Type.REQUEST;
+        return packageId != null && isRequest();
     }
 }
