@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Communicates with server or client.
  */
-public class ConnectionSide {
+public class ConnectionSide extends Listener {
 
     Connection connection;
 
@@ -20,12 +20,25 @@ public class ConnectionSide {
     protected HashMap<String, Response> waiting;
 
     public ConnectionSide(Connection connection) {
-        this.listener = new ArrayList<Response>();
-        this.waiting = new HashMap<String, Response>();
-        this.connection = connection;
+        this();
+        setConnection(connection);
     }
 
+    public ConnectionSide() {
+        this.listener = new ArrayList<Response>();
+        this.waiting = new HashMap<String, Response>();
+
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+        connection.addListener(this);
+    }
+
+    @Override
     public void received(Connection connection, Object o) {
+        if (connection != this.connection) return;
+
         if (o instanceof DataPackage) {
             DataPackage dp = (DataPackage) o;
             if (dp.isResponse() && waiting.containsKey(dp.getPackageId())) { // is (waiting) response
@@ -47,6 +60,15 @@ public class ConnectionSide {
         }
     }
 
+    @Override
+    public void disconnected(Connection connection) {
+        if (connection != this.connection) return;
+
+        this.waiting.clear();
+        this.listener.clear();
+        this.connection = null;
+    }
+
     public synchronized void send(Object object, Response response) {
         DataPackage dp = new DataPackage(object, this.generateId(), false);
         this.waiting.put(dp.packageId, response);
@@ -56,13 +78,6 @@ public class ConnectionSide {
     public synchronized void send(Object object) {
         DataPackage dp = new DataPackage(object);
         connection.sendTCP(dp);
-    }
-
-    public void destroy()
-    {
-        this.waiting.clear();
-        this.listener.clear();
-        this.connection = null;
     }
 
     public void addListener(Response listener) {
