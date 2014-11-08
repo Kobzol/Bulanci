@@ -63,6 +63,15 @@ project(":core") {
     }
 }
 
+project(":server") {
+    apply plugin: "java"
+    apply plugin: "idea"
+
+    dependencies {
+        compile fileTree(dir: '../lib', include: '*.jar')
+    }
+}
+
 tasks.eclipse.doLast {
     delete ".project"
 }
