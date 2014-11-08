@@ -22,6 +22,13 @@ public class PlayerInputHandler {
      * @param input input
      */
     public void checkInput(Input input) {
+        if (input.isKeyPressed(Input.Keys.UP)) {
+            this.generateMove(true);
+        }
+        else if (input.isKeyPressed(Input.Keys.DOWN)) {
+            this.generateMove(false);
+        }
+
         if (input.isKeyPressed(Input.Keys.RIGHT)) {
             this.generateRotation(true);
         }
@@ -40,5 +47,9 @@ public class PlayerInputHandler {
         catch (CommandFactory.UnknownCommand unknownCommandException) {
             unknownCommandException.printStackTrace();
         }
+    }
+
+    private void generateMove(boolean forward) {
+
     }
 }
