@@ -9,10 +9,8 @@ import cz.kobzol.bulanci.command.ICommand;
 import cz.kobzol.bulanci.command.ICommandInvoker;
 import cz.kobzol.bulanci.command.ISignatureCommand;
 
-/**
- * Temporary only for local
- */
-public class CommandRouter implements ICommandInvoker {
+
+public class LocalCommandRouter implements ICommandInvoker {
 
     final int SERVER_CLIENT_ID = 0;
 
@@ -22,20 +20,11 @@ public class CommandRouter implements ICommandInvoker {
 
     Client connection;
 
-    protected int clientId = SERVER_CLIENT_ID;
+    protected Integer clientId;
 
-    public CommandRouter(Client connection, CommandFactory factory, ICommandInvoker localInvoker) {
-        this.connection = connection;
+    public LocalCommandRouter(CommandFactory factory, ICommandInvoker localInvoker) {
         this.factory = factory;
         this.localInvoker = localInvoker;
-
-        connection.addListener(new Listener() {
-            public void received(Connection connection, Object object) {
-                if (object instanceof ISignatureCommand) {
-                    CommandRouter.this.acceptSignature((ISignatureCommand) object);
-                }
-            }
-        });
     }
 
 
@@ -43,8 +32,17 @@ public class CommandRouter implements ICommandInvoker {
      * If this is a local player, it must be set!
      * @param clientId
      */
-    public void setClientId(int clientId) {
+    public void setClientId(Client connection, int clientId) {
         this.clientId = clientId;
+        this.connection = connection;
+
+        connection.addListener(new Listener() {
+            public void received(Connection connection, Object object) {
+                if (object instanceof ISignatureCommand) {
+                    LocalCommandRouter.this.acceptSignature((ISignatureCommand) object);
+                }
+            }
+        });
     }
 
 
@@ -53,6 +51,7 @@ public class CommandRouter implements ICommandInvoker {
      * @param command
      */
     public void invokeCommand(ICommand command) {
+        checkConnection();
         ISignatureCommand signature = command.getSignatureCommand();
         signature.setClientId(this.clientId);
         connection.sendTCP(signature);
@@ -65,6 +64,7 @@ public class CommandRouter implements ICommandInvoker {
      * @param signature
      */
     public void executeSignature(ISignatureCommand signature) {
+        checkConnection();
         signature.setClientId(this.clientId);
         connection.sendTCP(signature);
         this.acceptSignature(signature);
@@ -88,6 +88,11 @@ public class CommandRouter implements ICommandInvoker {
         return false;
     }
 
-
+    private void checkConnection()
+    {
+        if (this.connection == null && this.clientId == null) {
+            throw new Error("Please, call first setClientId()");
+        }
+    }
 
 }
