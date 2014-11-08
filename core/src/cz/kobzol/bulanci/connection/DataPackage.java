@@ -60,6 +60,6 @@ public class DataPackage {
      * Waiting for response
      */
     public boolean isResponsible() {
-        return packageId == null;
+        return packageId != null && type == Type.REQUEST;
     }
 }

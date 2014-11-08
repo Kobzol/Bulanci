@@ -31,7 +31,7 @@ public class ConnectionSide {
                     } else if (dp.isRequest()) {
                         for (Response response : listener) {
                             Object responseObject = response.received(connection, o);
-                            if (responseObject != null) {
+                            if (dp.isResponsible() && responseObject != null) {
                                 DataPackage responsePackage = new DataPackage(responseObject, dp.getPackageId(), DataPackage.Type.RESPONSE);
                                 connection.sendTCP(responsePackage);
                             }
