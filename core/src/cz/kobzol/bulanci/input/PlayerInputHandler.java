@@ -38,14 +38,14 @@ public class PlayerInputHandler {
     }
 
     private void generateRotation(boolean rotateRight) {
-        RotateCommand.Serializable serializedCommand = new RotateCommand.Serializable(rotateRight);
+        RotateCommand.Signature serializedCommand = new RotateCommand.Signature(rotateRight);
 
         try {
             RotateCommand command = (RotateCommand) this.commandFactory.build(serializedCommand);
             this.commandInvoker.invokeCommand(command);
         }
-        catch (CommandFactory.UnknownCommand unknownCommandException) {
-            unknownCommandException.printStackTrace();
+        catch (CommandFactory.UnknownCommandException e) {
+            e.printStackTrace();
         }
     }
 

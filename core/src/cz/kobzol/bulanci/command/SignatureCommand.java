@@ -1,7 +1,7 @@
 package cz.kobzol.bulanci.command;
 
 
-abstract public class SerializableCommand implements ISerializableCommand {
+abstract public class SignatureCommand implements ISignatureCommand {
 
     private int clientId;
 
