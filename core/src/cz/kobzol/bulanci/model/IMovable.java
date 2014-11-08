@@ -6,6 +6,7 @@ package cz.kobzol.bulanci.model;
 public interface IMovable {
     /**
      * Moves the object in it's direction with it's speed.
+     * @param forward True, if the object should move forward, false, if the object should move backwards
      */
-    void move();
+    void move(boolean forward);
 }

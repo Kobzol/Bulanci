@@ -80,7 +80,13 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     }
 
     @Override
-    public void move() {
+    public void move(boolean forward) {
+        float speed = this.speed;
+
+        if (!forward) {
+            speed *= -1.0f;
+        }
+
         this.setPosition(this.getPosition().add(this.direction.scl(this.speed * Gdx.graphics.getDeltaTime())));
 
         this.setDirty();
