@@ -3,6 +3,7 @@ package cz.kobzol.bulanci.input;
 import com.badlogic.gdx.Input;
 import cz.kobzol.bulanci.command.CommandFactory;
 import cz.kobzol.bulanci.command.ICommandInvoker;
+import cz.kobzol.bulanci.command.MoveCommand;
 import cz.kobzol.bulanci.command.RotateCommand;
 
 /**
@@ -50,6 +51,14 @@ public class PlayerInputHandler {
     }
 
     private void generateMove(boolean forward) {
+        MoveCommand.Signature serializedCommand = new MoveCommand.Signature(forward);
 
+        try {
+            MoveCommand command = (MoveCommand) this.commandFactory.build(serializedCommand);
+            this.commandInvoker.invokeCommand(command);
+        }
+        catch (CommandFactory.UnknownCommandException e) {
+            e.printStackTrace();
+        }
     }
 }

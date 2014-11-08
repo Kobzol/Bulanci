@@ -17,7 +17,10 @@ public class CommandFactory {
 
         } else if (command instanceof RotateCommand.Signature) {
             RotateCommand.Signature serializable = (RotateCommand.Signature) command;
-            return new RotateCommand(level.getPlayerById(this.localPlayerId), serializable.rotateRight);
+            return new RotateCommand(level.getPlayerById(serializable.getClientId()), serializable.rotateRight);
+        } else if (command instanceof MoveCommand.Signature) {
+            MoveCommand.Signature serializable = (MoveCommand.Signature) command;
+            return new MoveCommand(level.getPlayerById(serializable.getClientId()), serializable.forward);
         }
 
         throw new UnknownCommandException(command);

@@ -6,10 +6,10 @@ import cz.kobzol.bulanci.player.Player;
  * Move's the player's object.
  */
 public class MoveCommand implements ICommand {
-    public static class Serializable extends SerializableCommand {
+    public static class Signature extends SignatureCommand {
         public final boolean forward;
 
-        public Serializable(boolean forward) {
+        public Signature(boolean forward) {
             this.forward = forward;
         }
     }
@@ -28,7 +28,7 @@ public class MoveCommand implements ICommand {
     }
 
     @Override
-    public ISerializableCommand getSeriliaziableCommand() {
-        return new Serializable(this.forward);
+    public ISignatureCommand getSignatureCommand() {
+        return new Signature(this.forward);
     }
 }
