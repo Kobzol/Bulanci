@@ -34,7 +34,7 @@ public class LocalCommandRouter implements ICommandInvoker {
         this.clientId = clientId;
         this.connection = connection;
 
-        connection.addListener(new ConnectionSide.Response() {
+        connection.addRequestListener(new ConnectionSide.Request() {
             public Object received(Connection connection, Object object) {
                 if (object instanceof ISignatureCommand) {
                     LocalCommandRouter.this.acceptSignature((ISignatureCommand) object);

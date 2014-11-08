@@ -42,7 +42,7 @@ public class StartupForm extends JFrame {
                 StartupForm.this.actionListener.connect(
                         StartupForm.this,
                         StartupForm.this.addressField.getText(),
-                        StartupForm.this.portField.getText(),
+                        Integer.parseInt(StartupForm.this.portField.getText()),
                         StartupForm.this.nicknameField.getText()
                 );
             }
@@ -106,7 +106,7 @@ public class StartupForm extends JFrame {
      * Listener is called by form, when is player ready, etc.
      */
     public interface ActionListener {
-        public void connect(StartupForm form, String address, String port, String nickname);
+        public void connect(StartupForm form, String address, int port, String nickname);
     }
 
 }
