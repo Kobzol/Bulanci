@@ -8,8 +8,9 @@ import cz.kobzol.bulanci.player.Player;
 public class RotateCommand implements ICommand {
     public static class Signature extends SignatureCommand {
 
-        public final boolean rotateRight;
+        public boolean rotateRight;
 
+        public Signature() {}
         public Signature(boolean rotateRight) {
             this.rotateRight = rotateRight;
         }

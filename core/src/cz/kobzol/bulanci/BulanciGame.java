@@ -40,7 +40,7 @@ public class BulanciGame extends ApplicationAdapter {
 
         this.level = new MapLoader(this.assetManager).parseLevel(Gdx.files.internal("map_proposal.xml"));
 
-        Player localPlayer = new Player(1, "Kobzol");
+        Player localPlayer = new Player(this.client.getID(), "Kobzol");
         localPlayer.setControlledObject(this.level.getObjectByKey("bulanek"));
 
         this.level.addPlayer(localPlayer);

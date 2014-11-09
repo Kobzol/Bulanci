@@ -7,8 +7,9 @@ import cz.kobzol.bulanci.player.Player;
  */
 public class MoveCommand implements ICommand {
     public static class Signature extends SignatureCommand {
-        public final boolean forward;
+        public boolean forward;
 
+        public Signature() {}
         public Signature(boolean forward) {
             this.forward = forward;
         }
