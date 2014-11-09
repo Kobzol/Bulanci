@@ -37,8 +37,35 @@ public class BulanciServer {
             public void connected(Connection connection) {
                 BulanciClient client = new BulanciClient(new ConnectionSide(connection));
                 clients.add(client);
+
+                client.addListener(new BulanciClient.Listener() {
+                    @Override
+                    public void onClientReady(BulanciClient client) {
+                        checkClientStates();
+                    }
+                });
             }
         });
+    }
+
+    private void checkClientStates() {
+        boolean allClientsReady = true;
+
+        for (BulanciClient client : this.clients) {
+            if (!client.isReady())
+            {
+                allClientsReady = false;
+                break;
+            }
+        }
+
+        if (this.clients.size() > 1 && allClientsReady) {
+            this.startGame();
+        }
+    }
+
+    private void startGame() {
+
     }
 
     /**
