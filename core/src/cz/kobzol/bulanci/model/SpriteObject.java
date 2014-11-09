@@ -1,6 +1,5 @@
 package cz.kobzol.bulanci.model;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -80,8 +79,16 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     }
 
     @Override
-    public void move() {
-        this.setPosition(this.getPosition().add(this.direction.scl(this.speed * Gdx.graphics.getDeltaTime())));
+    public void move(boolean forward) {
+        float speed = this.speed;
+
+        if (!forward) {
+            speed *= -1.0f;
+        }
+
+        Vector2 move_vector = new Vector2(this.direction);
+
+        this.setPosition(this.getPosition().add(move_vector.scl(speed)));
 
         this.setDirty();
     }

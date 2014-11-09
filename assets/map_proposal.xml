@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<level>
+    <map>
+        <name value="Map 1" />
+        <background value="circle.png" />
+        <dimension width="800" height="600" />
+    </map>
+    <objects>
+        <object interfaces="model.SpriteObject" class="model.SpriteObject" key="bulanek">
+            <dimension width="100" height="100" />
+            <texture value="circle.png" />
+            <speed value="5.0" />
+            <rotation value="90" />
+        </object>
+    </objects>
+</level>

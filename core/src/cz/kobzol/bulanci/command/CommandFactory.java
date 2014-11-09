@@ -1,25 +1,40 @@
 package cz.kobzol.bulanci.command;
 
+import cz.kobzol.bulanci.map.Level;
+
 public class CommandFactory {
 
-    public ICommand build(ISerializableCommand command) throws UnknownCommand {
-        if (command instanceof EchoCommand.Serializable) {
-            EchoCommand.Serializable serializable = (EchoCommand.Serializable) command;
-            return new EchoCommand(serializable.text);
-        }
+    private final Level level;
 
-        throw new UnknownCommand(command);
+    public CommandFactory(Level level){
+        this.level = level;
     }
 
-    public class UnknownCommand extends Exception {
-        private ISerializableCommand command;
+    public ICommand build(ISignatureCommand command) throws UnknownCommandException {
+        if (command instanceof EchoCommand.Signature) {
+            EchoCommand.Signature serializable = (EchoCommand.Signature) command;
+            return new EchoCommand(serializable.text);
 
-        public UnknownCommand(ISerializableCommand command) {
+        } else if (command instanceof RotateCommand.Signature) {
+            RotateCommand.Signature serializable = (RotateCommand.Signature) command;
+            return new RotateCommand(level.getPlayerById(serializable.getClientId()), serializable.rotateRight);
+        } else if (command instanceof MoveCommand.Signature) {
+            MoveCommand.Signature serializable = (MoveCommand.Signature) command;
+            return new MoveCommand(level.getPlayerById(serializable.getClientId()), serializable.forward);
+        }
+
+        throw new UnknownCommandException(command);
+    }
+
+    public class UnknownCommandException extends Exception {
+        private ISignatureCommand command;
+
+        public UnknownCommandException(ISignatureCommand command) {
             super();
             this.command = command;
         }
 
-        public ISerializableCommand getCommand() {
+        public ISignatureCommand getCommand() {
             return command;
         }
     }

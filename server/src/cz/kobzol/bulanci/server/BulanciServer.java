@@ -3,6 +3,8 @@ package cz.kobzol.bulanci.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import cz.kobzol.bulanci.connection.ConnectionSide;
+import cz.kobzol.bulanci.connection.KryoFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,48 +25,46 @@ public class BulanciServer {
     }
 
     public BulanciServer(int tcpPort, int udpPort) {
-        this.server = new Server();
+        this.server = KryoFactory.createServer();
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
 
         this.clients = new ArrayList<BulanciClient>();
 
-        this.setEvents();
-    }
-
-    /**
-     * Sets the client's events.
-     */
-    private void setEvents() {
         this.server.addListener(new Listener() {
             @Override
             public void connected(Connection connection) {
-                final BulanciClient client = new BulanciClient(connection);
-
+                BulanciClient client = new BulanciClient(new ConnectionSide(connection));
                 clients.add(client);
 
-                connection.addListener(new Listener() {
+                client.addListener(new BulanciClient.Listener() {
                     @Override
-                    public void disconnected(Connection connection) {
-                        clients.remove(client);
-                    }
-
-                    @Override
-                    public void received(Connection connection, Object data) {
-                        handleMessage(client, data);
+                    public void onClientReady(BulanciClient client) {
+                        checkClientStates();
                     }
                 });
             }
         });
     }
 
-    /**
-     * Handles incoming message.
-     * @param client message sender
-     * @param data message data
-     */
-    private void handleMessage(BulanciClient client, Object data) {
-        System.out.println(client + ": " + data);
+    private void checkClientStates() {
+        boolean allClientsReady = true;
+
+        for (BulanciClient client : this.clients) {
+            if (!client.isReady())
+            {
+                allClientsReady = false;
+                break;
+            }
+        }
+
+        if (this.clients.size() > 1 && allClientsReady) {
+            this.startGame();
+        }
+    }
+
+    private void startGame() {
+
     }
 
     /**
