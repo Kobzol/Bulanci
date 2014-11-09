@@ -1,13 +1,13 @@
 package cz.kobzol.bulanci.command;
 
-import cz.kobzol.bulanci.map.Level;
+import cz.kobzol.bulanci.game.Game;
 
 public class CommandFactory {
 
-    private final Level level;
+    private final Game game;
 
-    public CommandFactory(Level level){
-        this.level = level;
+    public CommandFactory(Game game){
+        this.game = game;
     }
 
     public ICommand build(ISignatureCommand command) throws UnknownCommandException {
@@ -17,10 +17,10 @@ public class CommandFactory {
 
         } else if (command instanceof RotateCommand.Signature) {
             RotateCommand.Signature serializable = (RotateCommand.Signature) command;
-            return new RotateCommand(level.getPlayerById(serializable.getClientId()), serializable.rotateRight);
+            return new RotateCommand(game.getPlayerById(serializable.getClientId()), serializable.rotateRight);
         } else if (command instanceof MoveCommand.Signature) {
             MoveCommand.Signature serializable = (MoveCommand.Signature) command;
-            return new MoveCommand(level.getPlayerById(serializable.getClientId()), serializable.forward);
+            return new MoveCommand(game.getPlayerById(serializable.getClientId()), serializable.forward);
         }
 
         throw new UnknownCommandException(command);
