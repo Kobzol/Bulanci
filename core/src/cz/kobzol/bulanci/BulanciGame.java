@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.esotericsoftware.kryonet.Connection;
 import cz.kobzol.bulanci.command.CommandFactory;
 import cz.kobzol.bulanci.command.CommandInvoker;
 import cz.kobzol.bulanci.connection.ConnectionSide;
@@ -27,7 +26,13 @@ public class BulanciGame extends ApplicationAdapter {
     private LocalCommandRouter localCommandRouter;
     private CommandInvoker commandInvoker = new CommandInvoker();
     private PlayerInputHandler inputHandler;
-	
+
+    private ConnectionSide client;
+
+    public BulanciGame(ConnectionSide client) {
+        this.client = client;
+    }
+
 	@Override
 	public void create() {
 		this.batch = new SpriteBatch();
@@ -42,7 +47,7 @@ public class BulanciGame extends ApplicationAdapter {
 
         this.camera = this.createCamera();
         this.localCommandRouter = new LocalCommandRouter(new CommandFactory(this.level), this.commandInvoker);
-        //this.localCommandRouter.setClientId(new ConnectionSide(), 1);
+        this.localCommandRouter.setClientId(this.client, this.client.getID());
         this.inputHandler = new PlayerInputHandler(this.localCommandRouter);
 	}
 

@@ -33,19 +33,11 @@ public class DesktopLauncher {
                         public void connected(Connection connection) {
                             final ConnectionSide cc = new ConnectionSide();
                             cc.setConnection(connection);
-                            cc.send("Ahoj jsem tu správně?", new ConnectionSide.Request() {
-                                @Override
-                                public Object received(Connection connection, Object object) {
-                                    form.addLog("Server: " + object.toString());
-                                    cc.send("I love tree (a ty, " + object + ", to víš a mlč!)");
-                                    return null;
-                                }
-                            });
+                            startGame(cc);
                         }
 
                     });
                     client.connect(5000, address, port, port);
-                    startGame();
                 } catch (IOException e) {
                     form.addLog("Nepodařilo se navázat spojení");
                     e.printStackTrace();
@@ -55,8 +47,8 @@ public class DesktopLauncher {
         form.setVisible(true);
     }
 
-    public void startGame() {
+    public void startGame(ConnectionSide connectionSide) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new BulanciGame(), config);
+        new LwjglApplication(new BulanciGame(connectionSide), config);
     }
 }

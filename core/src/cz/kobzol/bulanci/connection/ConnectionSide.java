@@ -29,7 +29,6 @@ public class ConnectionSide extends Listener {
         this.disconnectedListeners = new ArrayList<Disconnected>();
         this.requestListeners = new ArrayList<Request>();
         this.waiting = new HashMap<String, Request>();
-
     }
 
     public void setConnection(Connection connection) {
@@ -39,6 +38,10 @@ public class ConnectionSide extends Listener {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public int getID() {
+        return this.connection.getID();
     }
 
     public void addRequestListener(Request listener) {
