@@ -1,4 +1,4 @@
-package cz.kobzol.bulanci;
+package cz.kobzol.bulanci.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -18,9 +18,8 @@ import cz.kobzol.bulanci.model.IDrawable;
 import cz.kobzol.bulanci.model.IGameObject;
 import cz.kobzol.bulanci.player.Player;
 
-public class BulanciGame extends ApplicationAdapter {
+public class GameController extends ApplicationAdapter {
 	private SpriteBatch batch;
-    private Level level;
     private AssetManager assetManager;
     private OrthographicCamera camera;
     private LocalCommandRouter localCommandRouter;
@@ -29,7 +28,9 @@ public class BulanciGame extends ApplicationAdapter {
 
     private ConnectionSide client;
 
-    public BulanciGame(ConnectionSide client) {
+    private Game game;
+
+    public GameController(ConnectionSide client) {
         this.client = client;
     }
 
@@ -38,15 +39,17 @@ public class BulanciGame extends ApplicationAdapter {
 		this.batch = new SpriteBatch();
         this.assetManager = this.loadAssets();
 
-        this.level = new MapLoader(this.assetManager).parseLevel(Gdx.files.internal("map_proposal.xml"));
+        Level level = new MapLoader(this.assetManager).parseLevel(Gdx.files.internal("map_proposal.xml"));
 
         Player localPlayer = new Player(this.client.getID(), "Kobzol");
-        localPlayer.setControlledObject(this.level.getObjectByKey("bulanek"));
+        localPlayer.setControlledObject(level.getObjectByKey("bulanek"));
 
-        this.level.addPlayer(localPlayer);
+        level.addPlayer(localPlayer);
+
+        this.game = new Game(level);
 
         this.camera = this.createCamera();
-        this.localCommandRouter = new LocalCommandRouter(new CommandFactory(this.level), this.commandInvoker);
+        this.localCommandRouter = new LocalCommandRouter(new CommandFactory(game), this.commandInvoker);
         this.localCommandRouter.setClientId(this.client, this.client.getID());
         this.inputHandler = new PlayerInputHandler(this.localCommandRouter);
 	}
@@ -76,6 +79,8 @@ public class BulanciGame extends ApplicationAdapter {
 
 	@Override
 	public void render()  {
+        this.game.update();
+
         Gdx.gl.glClearColor(0, 0, 0.5f, 0.5f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -85,9 +90,9 @@ public class BulanciGame extends ApplicationAdapter {
         batch.setProjectionMatrix(this.camera.combined);
 		batch.begin();
 
-        this.level.getMap().draw(batch);
+        this.game.getMap().draw(batch);
 
-        for (IGameObject object : this.level.getObjects()) {
+        for (IGameObject object : this.game.getObjects()) {
             if (object instanceof IDrawable) {
                 ((IDrawable) object).draw(batch);
             }
