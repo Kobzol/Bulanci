@@ -4,7 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import cz.kobzol.bulanci.connection.ConnectionSide;
-import cz.kobzol.bulanci.connection.DataPackage;
+import cz.kobzol.bulanci.connection.KryoFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,10 +25,9 @@ public class BulanciServer {
     }
 
     public BulanciServer(int tcpPort, int udpPort) {
-        this.server = new Server();
+        this.server = KryoFactory.createServer();
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
-        this.server.getKryo().register(DataPackage.class);
 
         this.clients = new ArrayList<BulanciClient>();
 

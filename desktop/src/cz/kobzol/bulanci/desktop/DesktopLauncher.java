@@ -6,7 +6,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import cz.kobzol.bulanci.BulanciGame;
 import cz.kobzol.bulanci.connection.ConnectionSide;
-import cz.kobzol.bulanci.connection.DataPackage;
+import cz.kobzol.bulanci.connection.KryoFactory;
 
 import java.io.IOException;
 
@@ -24,8 +24,7 @@ public class DesktopLauncher {
             public void connect(final StartupForm form, String address, int port, String nickname) {
                 form.addLog("Start spojení...");
                 try {
-                    com.esotericsoftware.kryonet.Client client = new com.esotericsoftware.kryonet.Client();
-                    client.getKryo().register(DataPackage.class);
+                    com.esotericsoftware.kryonet.Client client = KryoFactory.createClient();
                     client.start();
 
                     client.addListener(new Listener() {
