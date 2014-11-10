@@ -68,7 +68,7 @@ public class GameController extends ApplicationAdapter {
      */
     private OrthographicCamera createCamera() {
         OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 600);
+        camera.setToOrtho(false, 1000, 800);
 
         return camera;
     }

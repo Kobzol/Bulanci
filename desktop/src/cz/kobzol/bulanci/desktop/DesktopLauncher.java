@@ -33,8 +33,7 @@ public class DesktopLauncher {
                     client.addListener(new Listener() {
                         @Override
                         public void connected(Connection connection) {
-                            final ConnectionSide cc = new ConnectionSide();
-                            cc.setConnection(connection);
+                            final ConnectionSide cc = new ConnectionSide(connection);
                             cc.send(new SetPlayerNameMessage(nickname), new ConnectionSide.Request() {
                                 @Override
                                 public Object received(Connection connection, Object object) {
@@ -61,6 +60,13 @@ public class DesktopLauncher {
         this.form.setVisible(false);
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+
+        config.foregroundFPS = 60;
+        config.backgroundFPS = 60;
+        config.resizable = false;
+        config.width = 1000;
+        config.height = 800;
+
         new LwjglApplication(new GameController(connectionSide), config);
     }
 }
