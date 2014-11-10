@@ -80,6 +80,13 @@ public class BulanciClient {
                 return null;
             }
         });
+        this.connection.addDisconnectedListener(new ConnectionSide.Disconnected() {
+            @Override
+            public void disconnected() {
+                notifyDisconnected();
+                System.out.println(this + " disconnected!");
+            }
+        });
     }
 
     private Object handleMessage(IIdentifiableMessage message) {
@@ -125,9 +132,15 @@ public class BulanciClient {
             listener.onCommandReceived(signature);
         }
     }
+    private void notifyDisconnected() {
+        for (Listener listener : this.listeners) {
+            listener.onDisconnected(this);
+        }
+    }
 
     public interface Listener {
         void onClientReady(BulanciClient client);
         void onCommandReceived(ISignatureCommand signature);
+        void onDisconnected(BulanciClient client);
     }
 }

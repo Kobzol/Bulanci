@@ -55,6 +55,10 @@ public class BulanciServer {
         return new Game(level);
     }
 
+    private void removeClient(BulanciClient client) {
+        this.clients.remove(client);
+    }
+
     private void createClient(Connection connection) {
         Player player = new Player(connection.getID());
         player.setControlledObject(this.game.getLevel().getObjectByKey(player.getStandardObjectKey()));
@@ -67,7 +71,11 @@ public class BulanciServer {
             @Override
             public void onClientReady(BulanciClient client) {
                 checkClientStates();
-                System.out.println(client + " is ready!");
+            }
+
+            @Override
+            public void onDisconnected(BulanciClient client) {
+                removeClient(client);
             }
 
             @Override
