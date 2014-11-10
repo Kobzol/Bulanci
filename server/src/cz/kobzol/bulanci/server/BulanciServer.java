@@ -67,6 +67,7 @@ public class BulanciServer {
             @Override
             public void onClientReady(BulanciClient client) {
                 checkClientStates();
+                System.out.println(client + " is ready!");
             }
 
             @Override
@@ -93,13 +94,23 @@ public class BulanciServer {
     }
 
     private void startGame() {
+        for (BulanciClient client : this.clients) {
+            client.sendPlayersInfo(this.clients);
+        }
 
+        for (BulanciClient client : this.clients) {
+            client.sendStartGame();
+        }
+
+        this.game.start();
     }
 
     private void receiveCommand(BulanciClient client, ISignatureCommand signature) {
-        for (BulanciClient remoteClient : this.clients) {
-            if (remoteClient != client) {
-                remoteClient.send(signature);
+        if (this.game.isRunning()) {
+            for (BulanciClient remoteClient : this.clients) {
+                if (remoteClient != client) {
+                    remoteClient.send(signature);
+                }
             }
         }
     }

@@ -1,11 +1,13 @@
 package cz.kobzol.bulanci.server;
 
 import com.esotericsoftware.kryonet.Connection;
+import cz.kobzol.bulanci.command.IIdentifiableMessage;
 import cz.kobzol.bulanci.command.ISignatureCommand;
-import cz.kobzol.bulanci.command.SetPlayerNameMessage;
-import cz.kobzol.bulanci.command.SetPlayerReadyMessage;
+import cz.kobzol.bulanci.command.message.CreatePlayerMessage;
+import cz.kobzol.bulanci.command.message.SetPlayerNameMessage;
+import cz.kobzol.bulanci.command.message.SetPlayerReadyMessage;
+import cz.kobzol.bulanci.command.message.StartGameMessage;
 import cz.kobzol.bulanci.connection.ConnectionSide;
-import cz.kobzol.bulanci.connection.IIdentifiableMessage;
 import cz.kobzol.bulanci.player.Player;
 
 import java.util.ArrayList;
@@ -40,12 +42,28 @@ public class BulanciClient {
         this.setEvents();
     }
 
+    public int getID() {
+        return this.connection.getID();
+    }
+
     public void addListener(Listener listener) {
         this.listeners.add(listener);
     }
 
     public void send(Object data) {
         this.connection.send(data);
+    }
+
+    public void sendPlayersInfo(List<BulanciClient> clients) {
+        for (BulanciClient client : clients) {
+            if (client != this) {
+                this.send(new CreatePlayerMessage(client.getID()));
+            }
+        }
+    }
+
+    public void sendStartGame() {
+        this.send(new StartGameMessage());
     }
 
     private void setEvents() {

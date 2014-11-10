@@ -41,7 +41,10 @@ public class ConnectionSide extends Listener {
     }
 
     public int getID() {
-        return this.connection.getID();
+        if (this.connection != null) {
+            return this.connection.getID();
+        }
+        else return -1;
     }
 
     public void addRequestListener(Request listener) {
@@ -101,6 +104,11 @@ public class ConnectionSide extends Listener {
     public synchronized void send(Object object) {
         DataPackage dp = new DataPackage(object);
         connection.sendTCP(dp);
+    }
+
+    public synchronized void sendUDP(Object object) {
+        DataPackage dp = new DataPackage(object);
+        connection.sendUDP(object);
     }
 
     private String generateId() {

@@ -53,7 +53,7 @@ public class LocalCommandRouter implements ICommandInvoker {
         checkConnection();
         ISignatureCommand signature = command.getSignatureCommand();
         signature.setClientId(this.clientId);
-        connection.send(signature);
+        connection.sendUDP(signature);
         this.localInvoker.invokeCommand(command);
     }
 
@@ -65,7 +65,7 @@ public class LocalCommandRouter implements ICommandInvoker {
     public void executeSignature(ISignatureCommand signature) {
         checkConnection();
         signature.setClientId(this.clientId);
-        connection.send(signature);
+        connection.sendUDP(signature);
         this.acceptSignature(signature);
     }
 

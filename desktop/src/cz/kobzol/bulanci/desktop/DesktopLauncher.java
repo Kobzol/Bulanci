@@ -4,7 +4,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import cz.kobzol.bulanci.command.SetPlayerNameMessage;
+import cz.kobzol.bulanci.command.message.SetPlayerNameMessage;
 import cz.kobzol.bulanci.connection.ConnectionSide;
 import cz.kobzol.bulanci.connection.KryoFactory;
 import cz.kobzol.bulanci.game.GameController;
