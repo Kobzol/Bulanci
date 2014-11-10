@@ -5,6 +5,10 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import cz.kobzol.bulanci.connection.ConnectionSide;
 import cz.kobzol.bulanci.connection.KryoFactory;
+import cz.kobzol.bulanci.game.Game;
+import cz.kobzol.bulanci.map.Level;
+import cz.kobzol.bulanci.map.MapLoader;
+import cz.kobzol.bulanci.player.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ public class BulanciServer {
     private final int udpPort;
 
     private final List<BulanciClient> clients;
+    private Game game;
 
     public BulanciServer(int port) {
         this(port, port);
@@ -30,19 +35,37 @@ public class BulanciServer {
         this.udpPort = udpPort;
 
         this.clients = new ArrayList<BulanciClient>();
-
         this.server.addListener(new Listener() {
             @Override
             public void connected(Connection connection) {
-                BulanciClient client = new BulanciClient(new ConnectionSide(connection));
-                clients.add(client);
+                createClient(connection);
+            }
+        });
 
-                client.addListener(new BulanciClient.Listener() {
-                    @Override
-                    public void onClientReady(BulanciClient client) {
-                        checkClientStates();
-                    }
-                });
+        this.game = this.createGame();
+    }
+
+    public List<BulanciClient> getClients() {
+        return this.clients;
+    }
+
+    private Game createGame() {
+        Level level = new MapLoader(null).parseLevel(cz.kobzol.bulanci.util.Files.readFile("map_proposal.xml"));
+        return new Game(level);
+    }
+
+    private void createClient(Connection connection) {
+        Player player = new Player(connection.getID());
+        player.setControlledObject(this.game.getLevel().getObjectByKey("player" + connection.getID()));
+        this.game.getLevel().addPlayer(player);
+
+        BulanciClient client = new BulanciClient(new ConnectionSide(connection), player);
+        clients.add(client);
+
+        client.addListener(new BulanciClient.Listener() {
+            @Override
+            public void onClientReady(BulanciClient client) {
+                checkClientStates();
             }
         });
     }

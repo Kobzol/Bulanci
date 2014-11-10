@@ -1,8 +1,12 @@
 package cz.kobzol.bulanci.server;
 
+import com.esotericsoftware.kryonet.Connection;
 import cz.kobzol.bulanci.connection.ConnectionSide;
+import cz.kobzol.bulanci.connection.IIdentifiableMessage;
+import cz.kobzol.bulanci.player.Player;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -11,18 +15,23 @@ import java.util.List;
 public class BulanciClient {
     public enum ClientState {
         CONNECTED,
+        NAME_SET,
         READY,
         IN_GAME
     }
 
     private ConnectionSide connection;
-    private ClientState state;
+    private Player player;
+
+    private EnumSet<ClientState> state = EnumSet.noneOf(ClientState.class);
 
     private List<Listener> listeners;
 
-    public BulanciClient(ConnectionSide connection) {
+    public BulanciClient(ConnectionSide connection, Player player) {
         this.connection = connection;
-        this.state = ClientState.CONNECTED;
+        this.player = player;
+
+        this.state.add(ClientState.CONNECTED);
         this.listeners = new ArrayList<Listener>();
 
         this.setEvents();
@@ -33,28 +42,41 @@ public class BulanciClient {
     }
 
     private void setEvents() {
-        this.connection.addDisconnectedListener(new ConnectionSide.Disconnected() {
+        this.connection.addRequestListener(new ConnectionSide.Request() {
             @Override
-            public void disconnected() {
-                System.out.println("I was f*cked out! " + this);
+            public Object received(Connection connection, Object object) {
+                if (object instanceof IIdentifiableMessage) {
+                    IIdentifiableMessage msg = (IIdentifiableMessage) object;
+                    msg.setClientId(connection.getID());
+
+                    return handleMessage(msg);
+                }
+
+                return null;
             }
         });
     }
 
-    public ClientState getState() {
+    private Object handleMessage(IIdentifiableMessage message) {
+        return null;
+    }
+
+    public EnumSet<ClientState> getState() {
         return this.state;
     }
 
-    public void setReady() {
-        this.state = ClientState.READY;
+    private void setName(String name) {
+        this.player.setName(name);
+        this.state.add(ClientState.NAME_SET);
+    }
+
+    private void setReady() {
+        this.state.add(ClientState.READY);
         this.notifyClientReady();
     }
     public boolean isReady() {
-        return this.state == ClientState.READY;
-    }
-
-    public void setInGame() {
-        this.state = ClientState.IN_GAME;
+        return  this.state.contains(ClientState.READY) &&
+                this.state.contains(ClientState.NAME_SET);
     }
 
     private void notifyClientReady() {
