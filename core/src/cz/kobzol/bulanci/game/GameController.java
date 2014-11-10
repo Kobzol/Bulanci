@@ -92,7 +92,7 @@ public class GameController extends ApplicationAdapter {
 
         this.game.getMap().draw(batch);
 
-        for (IGameObject object : this.game.getObjects()) {
+        for (IGameObject object : this.game.getLevel().getObjects()) {
             if (object instanceof IDrawable) {
                 ((IDrawable) object).draw(batch);
             }
