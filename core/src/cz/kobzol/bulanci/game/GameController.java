@@ -26,12 +26,12 @@ public class GameController extends ApplicationAdapter {
     private CommandInvoker commandInvoker = new CommandInvoker();
     private PlayerInputHandler inputHandler;
 
-    private ConnectionSide client;
+    private GameClient client;
 
     private Game game;
 
     public GameController(ConnectionSide client) {
-        this.client = client;
+        this.client = new GameClient(client, this);
     }
 
 	@Override
@@ -41,24 +41,25 @@ public class GameController extends ApplicationAdapter {
 
         Level level = new MapLoader(this.assetManager).parseLevel(Gdx.files.internal("map_proposal.xml"));
         this.game = new Game(level);
-        this.createPlayers();
+        this.createPlayer(this.client.getID());
 
         this.camera = this.createCamera();
         this.localCommandRouter = new LocalCommandRouter(new CommandFactory(game), this.commandInvoker);
-        this.localCommandRouter.setClientId(this.client, this.client.getID());
+        this.localCommandRouter.setClientId(this.client.getConnection(), this.client.getID());
         this.inputHandler = new PlayerInputHandler(this.localCommandRouter);
+
+        this.client.setReady();
 	}
 
-    private void createPlayers() {
-        Player localPlayer = new Player(this.client.getID(), "Kobzol");
+    public void createPlayer(int id) {
+        Player localPlayer = new Player(id, "Kobzol");
         localPlayer.setControlledObject(this.game.getLevel().getObjectByKey(localPlayer.getStandardObjectKey()));
 
         this.game.getLevel().addPlayer(localPlayer);
+    }
 
-        Player remotePlayer = new Player(this.client.getID() == 1 ? 2 : 1, "Remote player");
-        remotePlayer.setControlledObject(this.game.getLevel().getObjectByKey(remotePlayer.getStandardObjectKey()));
-
-        this.game.getLevel().addPlayer(remotePlayer);
+    public void startGame() {
+        this.game.start();
     }
 
     /**
@@ -86,26 +87,29 @@ public class GameController extends ApplicationAdapter {
 
 	@Override
 	public void render()  {
-        this.game.update();
+        if (this.game.isRunning())
+        {
+            this.game.update();
 
-        Gdx.gl.glClearColor(0, 0, 0.5f, 0.5f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            Gdx.gl.glClearColor(0, 0, 0.5f, 0.5f);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        this.camera.update();
-        this.inputHandler.checkInput(Gdx.input);
+            this.camera.update();
+            this.inputHandler.checkInput(Gdx.input);
 
-        batch.setProjectionMatrix(this.camera.combined);
-		batch.begin();
+            batch.setProjectionMatrix(this.camera.combined);
+            batch.begin();
 
-        this.game.getMap().draw(batch);
+            this.game.getMap().draw(batch);
 
-        for (IGameObject object : this.game.getLevel().getObjects()) {
-            if (object instanceof IDrawable) {
-                ((IDrawable) object).draw(batch);
+            for (IGameObject object : this.game.getLevel().getObjects()) {
+                if (object instanceof IDrawable) {
+                    ((IDrawable) object).draw(batch);
+                }
             }
-        }
 
-		batch.end();
+            batch.end();
+        }
 	}
 
     @Override
