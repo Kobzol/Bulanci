@@ -12,12 +12,20 @@ public class Player implements IDrawable {
     private static final float OBJECT_ROTATION = 5.0f;
 
     private final int id;
-    private final String name;
+    private String name;
     private SpriteObject controlledObject;
+
+    public Player(int id) {
+        this(id, "Player #" + id);
+    }
 
     public Player(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public String getStandardObjectKey() {
+        return "player" + this.getId();
     }
 
     @Override
@@ -31,6 +39,9 @@ public class Player implements IDrawable {
 
     public String getName() {
         return this.name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
     public IGameObject getControlledObject() {

@@ -56,7 +56,7 @@ public class BulanciServer {
 
     private void createClient(Connection connection) {
         Player player = new Player(connection.getID());
-        player.setControlledObject(this.game.getLevel().getObjectByKey("player" + connection.getID()));
+        player.setControlledObject(this.game.getLevel().getObjectByKey(player.getStandardObjectKey()));
         this.game.getLevel().addPlayer(player);
 
         BulanciClient client = new BulanciClient(new ConnectionSide(connection), player);

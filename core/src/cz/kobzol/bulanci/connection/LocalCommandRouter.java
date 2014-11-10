@@ -79,6 +79,7 @@ public class LocalCommandRouter implements ICommandInvoker {
     {
         try {
             ICommand command = factory.build(signature);
+
             this.localInvoker.invokeCommand(command);
             return true;
         } catch (CommandFactory.UnknownCommandException e) {

@@ -1,6 +1,8 @@
 package cz.kobzol.bulanci.server;
 
 import com.esotericsoftware.kryonet.Connection;
+import cz.kobzol.bulanci.command.SetPlayerNameMessage;
+import cz.kobzol.bulanci.command.SetPlayerReadyMessage;
 import cz.kobzol.bulanci.connection.ConnectionSide;
 import cz.kobzol.bulanci.connection.IIdentifiableMessage;
 import cz.kobzol.bulanci.player.Player;
@@ -58,7 +60,15 @@ public class BulanciClient {
     }
 
     private Object handleMessage(IIdentifiableMessage message) {
-        return null;
+        if (message instanceof SetPlayerNameMessage) {
+            SetPlayerNameMessage msg = (SetPlayerNameMessage) message;
+            this.setName(msg.name);
+        }
+        else if (message instanceof SetPlayerReadyMessage) {
+            this.setReady();
+        }
+
+        return true;
     }
 
     public EnumSet<ClientState> getState() {

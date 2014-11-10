@@ -40,19 +40,26 @@ public class GameController extends ApplicationAdapter {
         this.assetManager = this.loadAssets();
 
         Level level = new MapLoader(this.assetManager).parseLevel(Gdx.files.internal("map_proposal.xml"));
-
-        Player localPlayer = new Player(this.client.getID(), "Kobzol");
-        localPlayer.setControlledObject(level.getObjectByKey("bulanek"));
-
-        level.addPlayer(localPlayer);
-
         this.game = new Game(level);
+        this.createPlayers();
 
         this.camera = this.createCamera();
         this.localCommandRouter = new LocalCommandRouter(new CommandFactory(game), this.commandInvoker);
         this.localCommandRouter.setClientId(this.client, this.client.getID());
         this.inputHandler = new PlayerInputHandler(this.localCommandRouter);
 	}
+
+    private void createPlayers() {
+        Player localPlayer = new Player(this.client.getID(), "Kobzol");
+        localPlayer.setControlledObject(this.game.getLevel().getObjectByKey(localPlayer.getStandardObjectKey()));
+
+        this.game.getLevel().addPlayer(localPlayer);
+
+        Player remotePlayer = new Player(this.client.getID() == 1 ? 2 : 1, "Remote player");
+        remotePlayer.setControlledObject(this.game.getLevel().getObjectByKey(remotePlayer.getStandardObjectKey()));
+
+        this.game.getLevel().addPlayer(remotePlayer);
+    }
 
     /**
      * Creates an orthographic camera.
