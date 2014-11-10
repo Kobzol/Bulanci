@@ -4,9 +4,10 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import cz.kobzol.bulanci.BulanciGame;
+import cz.kobzol.bulanci.command.SetPlayerNameMessage;
 import cz.kobzol.bulanci.connection.ConnectionSide;
 import cz.kobzol.bulanci.connection.KryoFactory;
+import cz.kobzol.bulanci.game.GameController;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class DesktopLauncher {
         StartupForm form = new StartupForm();
         form.setActionListener(new StartupForm.ActionListener() {
             @Override
-            public void connect(final StartupForm form, String address, int port, String nickname) {
+            public void connect(final StartupForm form, String address, int port, final String nickname) {
                 form.addLog("Start spojení...");
                 try {
                     com.esotericsoftware.kryonet.Client client = KryoFactory.createClient();
@@ -32,7 +33,14 @@ public class DesktopLauncher {
                         public void connected(Connection connection) {
                             final ConnectionSide cc = new ConnectionSide();
                             cc.setConnection(connection);
-                            startGame(cc);
+                            cc.send(new SetPlayerNameMessage(nickname), new ConnectionSide.Request() {
+                                @Override
+                                public Object received(Connection connection, Object object) {
+                                    startGame(cc);
+
+                                    return null;
+                                }
+                            });
                         }
 
                     });
@@ -48,6 +56,6 @@ public class DesktopLauncher {
 
     public void startGame(ConnectionSide connectionSide) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new BulanciGame(connectionSide), config);
+        new LwjglApplication(new GameController(connectionSide), config);
     }
 }
