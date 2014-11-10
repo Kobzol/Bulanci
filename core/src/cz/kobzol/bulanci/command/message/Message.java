@@ -1,6 +1,6 @@
-package cz.kobzol.bulanci.command;
+package cz.kobzol.bulanci.command.message;
 
-import cz.kobzol.bulanci.connection.IIdentifiableMessage;
+import cz.kobzol.bulanci.command.IIdentifiableMessage;
 
 /**
  * Represents net message.

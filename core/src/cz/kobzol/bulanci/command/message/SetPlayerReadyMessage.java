@@ -1,4 +1,4 @@
-package cz.kobzol.bulanci.command;
+package cz.kobzol.bulanci.command.message;
 
 /**
  * Makes the player ready.

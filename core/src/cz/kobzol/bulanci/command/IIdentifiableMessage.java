@@ -1,4 +1,4 @@
-package cz.kobzol.bulanci.connection;
+package cz.kobzol.bulanci.command;
 
 /**
  * Represents message with sender ID.

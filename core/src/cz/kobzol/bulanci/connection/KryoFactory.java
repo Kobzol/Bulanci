@@ -5,8 +5,10 @@ import com.esotericsoftware.kryonet.EndPoint;
 import com.esotericsoftware.kryonet.Server;
 import cz.kobzol.bulanci.command.MoveCommand;
 import cz.kobzol.bulanci.command.RotateCommand;
-import cz.kobzol.bulanci.command.SetPlayerNameMessage;
-import cz.kobzol.bulanci.command.SetPlayerReadyMessage;
+import cz.kobzol.bulanci.command.message.CreatePlayerMessage;
+import cz.kobzol.bulanci.command.message.SetPlayerNameMessage;
+import cz.kobzol.bulanci.command.message.SetPlayerReadyMessage;
+import cz.kobzol.bulanci.command.message.StartGameMessage;
 
 /**
  * Creates Kryonet Connections with registered classes.
@@ -32,5 +34,7 @@ public class KryoFactory {
 
         connection.getKryo().register(SetPlayerNameMessage.class);
         connection.getKryo().register(SetPlayerReadyMessage.class);
+        connection.getKryo().register(CreatePlayerMessage.class);
+        connection.getKryo().register(StartGameMessage.class);
     }
 }

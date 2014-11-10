@@ -1,4 +1,4 @@
-package cz.kobzol.bulanci.command;
+package cz.kobzol.bulanci.command.message;
 
 /**
  * Message that set's the player's name.
