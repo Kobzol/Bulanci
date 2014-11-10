@@ -2,7 +2,7 @@
 <level>
     <map>
         <name value="Map 1" />
-        <background value="circle.png" />
+        <background value="wood_bg.jpg" />
         <dimension width="800" height="600" />
     </map>
     <objects>

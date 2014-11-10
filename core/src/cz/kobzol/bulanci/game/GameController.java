@@ -17,6 +17,7 @@ import cz.kobzol.bulanci.map.MapLoader;
 import cz.kobzol.bulanci.model.IDrawable;
 import cz.kobzol.bulanci.model.IGameObject;
 import cz.kobzol.bulanci.player.Player;
+import cz.kobzol.bulanci.util.Files;
 
 public class GameController extends ApplicationAdapter {
 	private SpriteBatch batch;
@@ -79,7 +80,11 @@ public class GameController extends ApplicationAdapter {
      */
     private AssetManager loadAssets() {
         AssetManager assetManager = new AssetManager();
-        assetManager.load("circle.png", Texture.class);
+
+        for (String file : Files.getFilesWithExtension("", "jpg,jpeg,png")) {
+            assetManager.load(file, Texture.class);
+        }
+
         assetManager.finishLoading();
 
         return assetManager;
