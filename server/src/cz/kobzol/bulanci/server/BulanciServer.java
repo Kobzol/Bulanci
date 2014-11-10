@@ -3,6 +3,7 @@ package cz.kobzol.bulanci.server;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import cz.kobzol.bulanci.command.ISignatureCommand;
 import cz.kobzol.bulanci.connection.ConnectionSide;
 import cz.kobzol.bulanci.connection.KryoFactory;
 import cz.kobzol.bulanci.game.Game;
@@ -59,13 +60,18 @@ public class BulanciServer {
         player.setControlledObject(this.game.getLevel().getObjectByKey(player.getStandardObjectKey()));
         this.game.getLevel().addPlayer(player);
 
-        BulanciClient client = new BulanciClient(new ConnectionSide(connection), player);
+        final BulanciClient client = new BulanciClient(new ConnectionSide(connection), player);
         clients.add(client);
 
         client.addListener(new BulanciClient.Listener() {
             @Override
             public void onClientReady(BulanciClient client) {
                 checkClientStates();
+            }
+
+            @Override
+            public void onCommandReceived(ISignatureCommand signature) {
+                receiveCommand(client, signature);
             }
         });
     }
@@ -88,6 +94,14 @@ public class BulanciServer {
 
     private void startGame() {
 
+    }
+
+    private void receiveCommand(BulanciClient client, ISignatureCommand signature) {
+        for (BulanciClient remoteClient : this.clients) {
+            if (remoteClient != client) {
+                remoteClient.send(signature);
+            }
+        }
     }
 
     /**

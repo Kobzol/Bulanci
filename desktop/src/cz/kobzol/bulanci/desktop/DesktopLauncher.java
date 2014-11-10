@@ -13,14 +13,16 @@ import java.io.IOException;
 
 public class DesktopLauncher {
 
+    private StartupForm form;
+
     public static void main(String[] arg) {
         DesktopLauncher launcher = new DesktopLauncher();
         launcher.openGameLauncher();
     }
 
     public void openGameLauncher() {
-        StartupForm form = new StartupForm();
-        form.setActionListener(new StartupForm.ActionListener() {
+        this.form = new StartupForm();
+        this.form.setActionListener(new StartupForm.ActionListener() {
             @Override
             public void connect(final StartupForm form, String address, int port, final String nickname) {
                 form.addLog("Start spojení...");
@@ -51,10 +53,13 @@ public class DesktopLauncher {
                 }
             }
         });
-        form.setVisible(true);
+
+        this.form.setVisible(true);
     }
 
     public void startGame(ConnectionSide connectionSide) {
+        this.form.setVisible(false);
+
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         new LwjglApplication(new GameController(connectionSide), config);
     }

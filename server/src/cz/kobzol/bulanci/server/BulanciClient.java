@@ -1,6 +1,7 @@
 package cz.kobzol.bulanci.server;
 
 import com.esotericsoftware.kryonet.Connection;
+import cz.kobzol.bulanci.command.ISignatureCommand;
 import cz.kobzol.bulanci.command.SetPlayerNameMessage;
 import cz.kobzol.bulanci.command.SetPlayerReadyMessage;
 import cz.kobzol.bulanci.connection.ConnectionSide;
@@ -43,6 +44,10 @@ public class BulanciClient {
         this.listeners.add(listener);
     }
 
+    public void send(Object data) {
+        this.connection.send(data);
+    }
+
     private void setEvents() {
         this.connection.addRequestListener(new ConnectionSide.Request() {
             @Override
@@ -60,7 +65,10 @@ public class BulanciClient {
     }
 
     private Object handleMessage(IIdentifiableMessage message) {
-        if (message instanceof SetPlayerNameMessage) {
+        if (message instanceof ISignatureCommand) {
+            this.notifyCommandReceived((ISignatureCommand) message);
+        }
+        else if (message instanceof SetPlayerNameMessage) {
             SetPlayerNameMessage msg = (SetPlayerNameMessage) message;
             this.setName(msg.name);
         }
@@ -94,8 +102,14 @@ public class BulanciClient {
             listener.onClientReady(this);
         }
     }
+    private void notifyCommandReceived(ISignatureCommand signature) {
+        for (Listener listener : this.listeners) {
+            listener.onCommandReceived(signature);
+        }
+    }
 
     public interface Listener {
         void onClientReady(BulanciClient client);
+        void onCommandReceived(ISignatureCommand signature);
     }
 }
