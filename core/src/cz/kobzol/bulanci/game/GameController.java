@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import cz.kobzol.bulanci.command.CommandFactory;
-import cz.kobzol.bulanci.command.CommandInvoker;
+import cz.kobzol.bulanci.command.util.CommandFactory;
+import cz.kobzol.bulanci.command.util.CommandInvoker;
 import cz.kobzol.bulanci.connection.ConnectionSide;
 import cz.kobzol.bulanci.connection.DummyConnectionSide;
 import cz.kobzol.bulanci.connection.LocalCommandRouter;
@@ -36,12 +36,16 @@ public class GameController extends ApplicationAdapter {
         this.client = new GameClient(client, this);
     }
 
+    public AssetManager getAssetManager() {
+        return this.assetManager;
+    }
+
 	@Override
 	public void create() {
 		this.batch = new SpriteBatch();
         this.assetManager = this.loadAssets();
 
-        Level level = new MapLoader(this.assetManager).parseLevel(Gdx.files.internal("map_proposal.xml"));
+        Level level = new MapLoader(this).parseLevel(Gdx.files.internal("map_proposal.xml"));
         this.game = new Game(level);
         this.createPlayer(this.client.getID());
 

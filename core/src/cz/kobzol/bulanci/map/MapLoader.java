@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import cz.kobzol.bulanci.game.GameController;
+import cz.kobzol.bulanci.model.Blob;
 import cz.kobzol.bulanci.model.GameObject;
 import cz.kobzol.bulanci.model.ITexturable;
 import cz.kobzol.bulanci.model.Shape;
@@ -27,9 +29,11 @@ public class MapLoader {
     private static String CLASS_NAMESPACE = "cz.kobzol.bulanci";
 
     private final AssetManager assetManager;
+    private final GameController gameController;
 
-    public MapLoader(AssetManager assetManager) {
-        this.assetManager = assetManager;
+    public MapLoader(GameController gameController) {
+        this.assetManager = gameController.getAssetManager();
+        this.gameController = gameController;
     }
 
     public Level parseLevel(FileHandle levelXML) {
@@ -97,6 +101,9 @@ public class MapLoader {
                         }
                         else if (iface.equals("model.SpriteObject")) {
                             this.parseSpriteObject(object, element);
+                        }
+                        else if (iface.equals("model.Blob")) {
+                            this.parseBlob(object, element);
                         }
                     }
 
@@ -172,6 +179,18 @@ public class MapLoader {
 
         spriteObject.setSpeed(this.parseSpeed(elementObject));
         spriteObject.setRotation(this.parseRotation(elementObject));
+    }
+
+    /**
+     * Parses Blob.
+     * @param object GameObject
+     * @param elementObject DOM element
+     */
+    private void parseBlob(Object object, Element elementObject) {
+        Blob blob = (Blob) object;
+
+        this.parseSpriteObject(blob, elementObject);
+        blob.setGameController(this.gameController);
     }
 
     /**

@@ -1,9 +1,9 @@
 package cz.kobzol.bulanci.player;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import cz.kobzol.bulanci.model.Blob;
 import cz.kobzol.bulanci.model.IDrawable;
 import cz.kobzol.bulanci.model.IGameObject;
-import cz.kobzol.bulanci.model.SpriteObject;
 
 /**
  * Represents player who controlls a game object.
@@ -13,7 +13,7 @@ public class Player implements IDrawable {
 
     private final int id;
     private String name;
-    private SpriteObject controlledObject;
+    private Blob controlledObject;
 
     public Player(int id) {
         this(id, "Player #" + id);
@@ -48,7 +48,7 @@ public class Player implements IDrawable {
         return this.controlledObject;
     }
     public void setControlledObject(IGameObject controlledObject) {
-        this.controlledObject = (SpriteObject) controlledObject;
+        this.controlledObject = (Blob) controlledObject;
     }
 
     /**
@@ -71,5 +71,12 @@ public class Player implements IDrawable {
      */
     public void moveObject(boolean forward) {
         this.controlledObject.move(forward);
+    }
+
+    /**
+     * Fire's the blob's gun.
+     */
+    public void fire() {
+        this.controlledObject.fire();
     }
 }

@@ -2,10 +2,10 @@ package cz.kobzol.bulanci.connection;
 
 
 import com.esotericsoftware.kryonet.Connection;
-import cz.kobzol.bulanci.command.CommandFactory;
-import cz.kobzol.bulanci.command.ICommand;
-import cz.kobzol.bulanci.command.ICommandInvoker;
-import cz.kobzol.bulanci.command.ISignatureCommand;
+import cz.kobzol.bulanci.command.util.CommandFactory;
+import cz.kobzol.bulanci.command.util.ICommand;
+import cz.kobzol.bulanci.command.util.ICommandInvoker;
+import cz.kobzol.bulanci.command.util.ISignatureCommand;
 
 
 public class LocalCommandRouter implements ICommandInvoker {

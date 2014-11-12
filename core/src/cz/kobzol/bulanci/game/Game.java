@@ -2,6 +2,8 @@ package cz.kobzol.bulanci.game;
 
 import cz.kobzol.bulanci.map.Level;
 import cz.kobzol.bulanci.map.Map;
+import cz.kobzol.bulanci.model.GameObject;
+import cz.kobzol.bulanci.model.IUpdatable;
 
 /**
  * Represents the game.
@@ -29,7 +31,11 @@ public class Game {
     }
 
     public void update() {
-
+        for (GameObject object : this.level.getObjects()) {
+            if (object instanceof IUpdatable) {
+                ((IUpdatable) object).update();
+            }
+        }
     }
 
     public Map getMap() {

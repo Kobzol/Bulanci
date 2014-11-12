@@ -1,10 +1,10 @@
 package cz.kobzol.bulanci.game;
 
 import com.esotericsoftware.kryonet.Connection;
-import cz.kobzol.bulanci.command.IIdentifiableMessage;
 import cz.kobzol.bulanci.command.message.CreatePlayerMessage;
 import cz.kobzol.bulanci.command.message.SetPlayerReadyMessage;
 import cz.kobzol.bulanci.command.message.StartGameMessage;
+import cz.kobzol.bulanci.command.util.IIdentifiableMessage;
 import cz.kobzol.bulanci.connection.ConnectionSide;
 
 /**
