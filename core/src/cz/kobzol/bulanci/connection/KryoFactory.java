@@ -3,6 +3,7 @@ package cz.kobzol.bulanci.connection;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.esotericsoftware.kryonet.Server;
+import cz.kobzol.bulanci.command.FireCommand;
 import cz.kobzol.bulanci.command.MoveCommand;
 import cz.kobzol.bulanci.command.RotateCommand;
 import cz.kobzol.bulanci.command.message.CreatePlayerMessage;
@@ -31,6 +32,7 @@ public class KryoFactory {
 
         connection.getKryo().register(RotateCommand.Signature.class);
         connection.getKryo().register(MoveCommand.Signature.class);
+        connection.getKryo().register(FireCommand.Signature.class);
 
         connection.getKryo().register(SetPlayerNameMessage.class);
         connection.getKryo().register(SetPlayerReadyMessage.class);
