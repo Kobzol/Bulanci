@@ -1,5 +1,7 @@
 package cz.kobzol.bulanci.model;
 
+import com.badlogic.gdx.math.Vector2;
+
 /**
  * Represents objects that can rotate.
  */
@@ -21,4 +23,16 @@ public interface IRotable {
      * @param angle rotation in degrees
      */
     void rotate(float angle);
+
+    /**
+     * Set's the object's direction.
+     * @param direction direction
+     */
+    void setDirection(Vector2 direction);
+
+    /**
+     * Get's the object's direction.
+     * @return direction
+     */
+    Vector2 getDirection();
 }

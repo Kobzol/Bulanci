@@ -107,6 +107,17 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     }
 
     @Override
+    public Vector2 getDirection() {
+        return new Vector2(this.direction);
+    }
+
+    @Override
+    public void setDirection(Vector2 direction) {
+        this.direction.set(direction);
+        this.setRotation(this.direction.angle());
+    }
+
+    @Override
     public void rotate(float angle) {
         this.setRotation(this.getRotation() + angle);
     }
