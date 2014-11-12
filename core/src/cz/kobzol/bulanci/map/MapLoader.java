@@ -194,7 +194,7 @@ public class MapLoader {
                     name = element.getAttribute("value");
                 }
                 else if (element.getTagName().equals("background")) {
-                    background = assetManager.get(element.getAttribute("value"), Texture.class);
+                    background = this.loadAsset(element.getAttribute("value"), Texture.class);
                 }
                 else if (element.getTagName().equals("dimension")) {
                     dimension = this.parseDimension(element);
@@ -217,7 +217,7 @@ public class MapLoader {
             return null;
         }
 
-        return this.assetManager.get(element.getAttribute("value"), Texture.class);
+        return this.loadAsset(element.getAttribute("value"), Texture.class);
     }
 
     /**
@@ -340,5 +340,12 @@ public class MapLoader {
         }
 
         return null;
+    }
+
+    private <T> T loadAsset(String assetName, Class<T> cls) {
+        if (this.assetManager != null) {
+            return this.assetManager.get(assetName, cls);
+        }
+        else return null;
     }
 }

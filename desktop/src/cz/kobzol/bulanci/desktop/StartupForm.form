@@ -67,7 +67,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value=""/>
+              <text value="Client"/>
             </properties>
           </component>
           <component id="76d41" class="javax.swing.JButton" binding="runButton" default-binding="true">

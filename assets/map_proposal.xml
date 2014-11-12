@@ -2,11 +2,19 @@
 <level>
     <map>
         <name value="Map 1" />
-        <background value="circle.png" />
+        <background value="wood_bg.jpg" />
         <dimension width="800" height="600" />
     </map>
     <objects>
-        <object interfaces="model.SpriteObject" class="model.SpriteObject" key="bulanek">
+        <object interfaces="model.SpriteObject" class="model.SpriteObject" key="player1">
+            <position x="0" y="0" />
+            <dimension width="100" height="100" />
+            <texture value="circle.png" />
+            <speed value="5.0" />
+            <rotation value="90" />
+        </object>
+        <object interfaces="model.SpriteObject" class="model.SpriteObject" key="player2">
+            <position x="100" y="100" />
             <dimension width="100" height="100" />
             <texture value="circle.png" />
             <speed value="5.0" />

@@ -25,7 +25,7 @@ public class ConnectionSide extends Listener {
         setConnection(connection);
     }
 
-    public ConnectionSide() {
+    private ConnectionSide() {
         this.disconnectedListeners = new ArrayList<Disconnected>();
         this.requestListeners = new ArrayList<Request>();
         this.waiting = new HashMap<String, Request>();
@@ -101,6 +101,11 @@ public class ConnectionSide extends Listener {
     public synchronized void send(Object object) {
         DataPackage dp = new DataPackage(object);
         connection.sendTCP(dp);
+    }
+
+    public synchronized void sendUDP(Object object) {
+        DataPackage dp = new DataPackage(object);
+        connection.sendUDP(object);
     }
 
     private String generateId() {
