@@ -28,8 +28,12 @@ import java.lang.reflect.Constructor;
 public class MapLoader {
     private static String CLASS_NAMESPACE = "cz.kobzol.bulanci";
 
-    private final AssetManager assetManager;
-    private final GameController gameController;
+    private AssetManager assetManager;
+    private GameController gameController;
+
+    public MapLoader() {
+
+    }
 
     public MapLoader(GameController gameController) {
         this.assetManager = gameController.getAssetManager();

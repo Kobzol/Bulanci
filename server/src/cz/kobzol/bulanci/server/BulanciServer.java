@@ -51,7 +51,7 @@ public class BulanciServer {
     }
 
     private Game createGame() {
-        Level level = new MapLoader(null).parseLevel(cz.kobzol.bulanci.util.Files.readFile("map_proposal.xml"));
+        Level level = new MapLoader().parseLevel(cz.kobzol.bulanci.util.Files.readFile("map_proposal.xml"));
         return new Game(level);
     }
 
