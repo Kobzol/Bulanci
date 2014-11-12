@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import cz.kobzol.bulanci.command.CommandFactory;
 import cz.kobzol.bulanci.command.CommandInvoker;
 import cz.kobzol.bulanci.connection.ConnectionSide;
+import cz.kobzol.bulanci.connection.DummyConnectionSide;
 import cz.kobzol.bulanci.connection.LocalCommandRouter;
 import cz.kobzol.bulanci.input.PlayerInputHandler;
 import cz.kobzol.bulanci.map.Level;
@@ -50,6 +51,10 @@ public class GameController extends ApplicationAdapter {
         this.inputHandler = new PlayerInputHandler(this.localCommandRouter);
 
         this.client.setReady();
+
+        if (this.client.getConnection() instanceof DummyConnectionSide) {
+            this.startGame();
+        }
 	}
 
     public void createPlayer(int id) {

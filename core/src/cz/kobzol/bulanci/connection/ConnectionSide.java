@@ -25,7 +25,7 @@ public class ConnectionSide extends Listener {
         setConnection(connection);
     }
 
-    private ConnectionSide() {
+    protected ConnectionSide() {
         this.disconnectedListeners = new ArrayList<Disconnected>();
         this.requestListeners = new ArrayList<Request>();
         this.waiting = new HashMap<String, Request>();

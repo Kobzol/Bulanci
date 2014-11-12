@@ -101,7 +101,7 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     @Override
     public void setRotation(float angle) {
         this.direction.setAngle(angle);
-        this.sprite.setRotation(this.direction.angle());
+        this.sprite.setRotation(this.direction.angle() - 90);
 
         this.setDirty();
     }

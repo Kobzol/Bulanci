@@ -9,16 +9,16 @@
         <object interfaces="model.SpriteObject" class="model.SpriteObject" key="player1">
             <position x="0" y="0" />
             <dimension width="100" height="100" />
-            <texture value="circle.png" />
+            <texture value="blob.png" />
             <speed value="5.0" />
             <rotation value="90" />
         </object>
         <object interfaces="model.SpriteObject" class="model.SpriteObject" key="player2">
             <position x="100" y="100" />
             <dimension width="100" height="100" />
-            <texture value="circle.png" />
+            <texture value="blob.png" />
             <speed value="5.0" />
-            <rotation value="90" />
+            <rotation value="0" />
         </object>
     </objects>
 </level>
