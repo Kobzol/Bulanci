@@ -1,4 +1,4 @@
-package cz.kobzol.bulanci.command;
+package cz.kobzol.bulanci.command.util;
 
 /**
  * Invokes commands.

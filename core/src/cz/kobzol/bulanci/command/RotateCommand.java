@@ -1,5 +1,7 @@
 package cz.kobzol.bulanci.command;
 
+import cz.kobzol.bulanci.command.util.ICommand;
+import cz.kobzol.bulanci.command.util.ISignatureCommand;
 import cz.kobzol.bulanci.player.Player;
 
 /**

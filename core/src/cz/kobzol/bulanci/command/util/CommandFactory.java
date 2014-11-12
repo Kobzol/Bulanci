@@ -1,5 +1,8 @@
-package cz.kobzol.bulanci.command;
+package cz.kobzol.bulanci.command.util;
 
+import cz.kobzol.bulanci.command.FireCommand;
+import cz.kobzol.bulanci.command.MoveCommand;
+import cz.kobzol.bulanci.command.RotateCommand;
 import cz.kobzol.bulanci.game.Game;
 
 public class CommandFactory {
@@ -17,6 +20,9 @@ public class CommandFactory {
         } else if (command instanceof MoveCommand.Signature) {
             MoveCommand.Signature serializable = (MoveCommand.Signature) command;
             return new MoveCommand(game.getLevel().getPlayerById(serializable.getClientId()), serializable.forward);
+        } else if (command instanceof FireCommand.Signature) {
+            FireCommand.Signature serializable = (FireCommand.Signature) command;
+            return new FireCommand(game.getLevel().getPlayerById(serializable.getClientId()));
         }
 
         throw new UnknownCommandException(command);
