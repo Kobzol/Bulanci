@@ -2,9 +2,11 @@ package cz.kobzol.bulanci.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import cz.kobzol.bulanci.game.GameController;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ public class Blob extends SpriteObject implements IUpdatable {
 
     public Blob() {
         this.bullets = new ArrayList<Bullet>();
-        this.fireCooldown = new Cooldown(50);
+        this.fireCooldown = new Cooldown(20);
     }
 
     public void setGameController(GameController gameController) {
@@ -42,11 +44,37 @@ public class Blob extends SpriteObject implements IUpdatable {
     }
 
     @Override
+    public void drawShape(ShapeRenderer shapeRenderer) {
+        for (Bullet bullet : this.bullets) {
+            bullet.drawShape(shapeRenderer);
+        }
+
+        super.drawShape(shapeRenderer);
+    }
+
+    @Override
     public void update() {
         this.fireCooldown.update();
 
-        for (Bullet bullet : this.bullets) {
-            bullet.update();
+        for (Iterator<Bullet> it = this.bullets.iterator(); it.hasNext();) {
+            Bullet bullet = it.next();
+
+            if (this.gameController.collidesWithWalls(bullet)) {
+                it.remove();
+            }
+            else bullet.update();
+        }
+    }
+
+    @Override
+    public void move(boolean forward) {
+        float x = this.getPositionX();
+        float y = this.getPositionY();
+
+        super.move(forward);
+
+        if (this.gameController.collidesWithWalls(this)) {
+            this.getPosition().set(x, y);
         }
     }
 

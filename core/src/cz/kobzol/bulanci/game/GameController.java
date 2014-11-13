@@ -16,9 +16,12 @@ import cz.kobzol.bulanci.connection.LocalCommandRouter;
 import cz.kobzol.bulanci.input.PlayerInputHandler;
 import cz.kobzol.bulanci.map.Level;
 import cz.kobzol.bulanci.map.MapLoader;
+import cz.kobzol.bulanci.model.GameObject;
+import cz.kobzol.bulanci.model.ICollidable;
 import cz.kobzol.bulanci.model.IDrawable;
 import cz.kobzol.bulanci.model.IGameObject;
 import cz.kobzol.bulanci.model.SpriteObject;
+import cz.kobzol.bulanci.model.Wall;
 import cz.kobzol.bulanci.player.Player;
 import cz.kobzol.bulanci.util.Files;
 
@@ -66,17 +69,6 @@ public class GameController extends ApplicationAdapter {
         }
 	}
 
-    public void createPlayer(int id) {
-        Player localPlayer = new Player(id, "Kobzol");
-        localPlayer.setControlledObject(this.game.getLevel().getObjectByKey(localPlayer.getStandardObjectKey()));
-
-        this.game.getLevel().addPlayer(localPlayer);
-    }
-
-    public void startGame() {
-        this.game.start();
-    }
-
     /**
      * Creates an orthographic camera.
      * @return orthographic camera
@@ -102,6 +94,31 @@ public class GameController extends ApplicationAdapter {
         assetManager.finishLoading();
 
         return assetManager;
+    }
+
+    public void createPlayer(int id) {
+        Player localPlayer = new Player(id, "Kobzol");
+        localPlayer.setControlledObject(this.game.getLevel().getObjectByKey(localPlayer.getStandardObjectKey()));
+
+        this.game.getLevel().addPlayer(localPlayer);
+    }
+
+    public void startGame() {
+        this.game.start();
+    }
+
+    public boolean collidesWithWalls(ICollidable collidable) {
+        for (GameObject object : this.game.getLevel().getObjects()) {
+            if (object instanceof Wall) {
+                Wall wall = (Wall) object;
+
+                if (wall.collidesWith(collidable)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 	@Override
