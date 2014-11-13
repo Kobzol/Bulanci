@@ -3,6 +3,7 @@ package cz.kobzol.bulanci.model;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -70,12 +71,17 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
     @Override
     public void draw(Batch batch) {
             batch.draw(
-                    this.sprite, this.sprite.getX(), this.sprite.getY(),
-                    this.sprite.getOriginX(), this.sprite.getOriginX(),
+                    this.sprite, this.sprite.getX() - this.sprite.getOriginX(), this.sprite.getY()  - this.sprite.getOriginY(),
+                    this.sprite.getOriginX(), this.sprite.getOriginY(),
                     this.sprite.getWidth(), this.sprite.getHeight(),
                     this.sprite.getScaleX(), this.sprite.getScaleY(), this.sprite.getRotation());
 
-            this.dirty = false;
+        this.dirty = false;
+    }
+
+
+    public void drawShape(ShapeRenderer shapeRenderer) {
+        shapeRenderer.rect(this.getBoundingBox().x, this.getBoundingBox().y, this.getBoundingBox().width, this.getBoundingBox().height);
     }
 
     @Override
@@ -124,11 +130,15 @@ public class SpriteObject extends DrawableShape implements IMovable, IRotable, I
 
     @Override
     public boolean collidesWith(ICollidable collidable) {
-        return this.sprite.getBoundingRectangle().overlaps(collidable.getBoundingBox());
+        return this.getBoundingBox().overlaps(collidable.getBoundingBox());
     }
 
     @Override
     public Rectangle getBoundingBox() {
-        return this.sprite.getBoundingRectangle();
+        Rectangle rect = this.sprite.getBoundingRectangle();
+        rect.x -= this.getDimension().getWidth() / 2.0f;
+        rect.y -= this.getDimension().getHeight() / 2.0f;
+
+        return rect;
     }
 }

@@ -2,7 +2,6 @@ package cz.kobzol.bulanci.model;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
 import cz.kobzol.bulanci.game.GameController;
 
 import java.util.ArrayList;
@@ -53,15 +52,11 @@ public class Blob extends SpriteObject implements IUpdatable {
 
     private Bullet createBullet() {
         Bullet bullet = new Bullet();
-        bullet.setPosition(this.getCenter());
+        bullet.setPosition(this.getPosition());
         bullet.setDirection(this.getDirection());
         bullet.setTexture(this.gameController.getAssetManager().get("bullet.png", Texture.class));
         bullet.setSpeed(20);
 
         return bullet;
-    }
-
-    private Vector2 getCenter() {
-        return new Vector2((float) (this.getPositionX() + this.getDimension().getWidth() / 2.0f), (float) (this.getPositionY() + this.getDimension().getHeight() / 2.0f));
     }
 }
