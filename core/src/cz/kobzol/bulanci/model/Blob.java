@@ -27,7 +27,7 @@ public class Blob extends SpriteObject implements IUpdatable {
         this.gameController = gameController;
     }
 
-    public void fire() {
+    public synchronized void fire() {
         if (this.fireCooldown.isReady()) {
             this.bullets.add(this.createBullet());
             this.fireCooldown.reset();
@@ -35,7 +35,7 @@ public class Blob extends SpriteObject implements IUpdatable {
     }
 
     @Override
-    public void draw(Batch batch) {
+    public synchronized void draw(Batch batch) {
         for (Bullet bullet : this.bullets) {
             bullet.draw(batch);
         }
@@ -53,13 +53,13 @@ public class Blob extends SpriteObject implements IUpdatable {
     }
 
     @Override
-    public void update() {
+    public synchronized void update() {
         this.fireCooldown.update();
 
         for (Iterator<Bullet> it = this.bullets.iterator(); it.hasNext();) {
             Bullet bullet = it.next();
 
-            if (this.gameController.collidesWithWalls(bullet)) {
+            if (this.game.collidesWithWalls(bullet)) {
                 it.remove();
             }
             else bullet.update();
@@ -73,7 +73,7 @@ public class Blob extends SpriteObject implements IUpdatable {
 
         super.move(forward);
 
-        if (this.gameController.collidesWithWalls(this)) {
+        if (this.game.collidesWithWalls(this)) {
             this.getPosition().set(x, y);
         }
     }

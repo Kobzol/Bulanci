@@ -16,28 +16,23 @@ import cz.kobzol.bulanci.connection.LocalCommandRouter;
 import cz.kobzol.bulanci.input.PlayerInputHandler;
 import cz.kobzol.bulanci.map.Level;
 import cz.kobzol.bulanci.map.MapLoader;
-import cz.kobzol.bulanci.model.GameObject;
-import cz.kobzol.bulanci.model.ICollidable;
 import cz.kobzol.bulanci.model.IDrawable;
 import cz.kobzol.bulanci.model.IGameObject;
 import cz.kobzol.bulanci.model.SpriteObject;
-import cz.kobzol.bulanci.model.Wall;
-import cz.kobzol.bulanci.player.Player;
 import cz.kobzol.bulanci.util.Files;
 
 public class GameController extends ApplicationAdapter {
-	private SpriteBatch batch;
     private AssetManager assetManager;
     private OrthographicCamera camera;
+    private SpriteBatch batch;
+    private ShapeRenderer shapeRenderer;
+
+    private PlayerInputHandler inputHandler;
     private LocalCommandRouter localCommandRouter;
     private CommandInvoker commandInvoker = new CommandInvoker();
-    private PlayerInputHandler inputHandler;
-
     private GameClient client;
 
     private Game game;
-
-    private ShapeRenderer shapeRenderer;
 
     public GameController(ConnectionSide client) {
         this.client = new GameClient(client, this);
@@ -55,7 +50,7 @@ public class GameController extends ApplicationAdapter {
 
         Level level = new MapLoader(this).parseLevel(Gdx.files.internal("map_proposal.xml"));
         this.game = new Game(level);
-        this.createPlayer(this.client.getID());
+        this.game.createPlayer(this.client.getID());
 
         this.camera = this.createCamera();
         this.localCommandRouter = new LocalCommandRouter(new CommandFactory(game), this.commandInvoker);
@@ -96,29 +91,8 @@ public class GameController extends ApplicationAdapter {
         return assetManager;
     }
 
-    public void createPlayer(int id) {
-        Player localPlayer = new Player(id, "Kobzol");
-        localPlayer.setControlledObject(this.game.getLevel().getObjectByKey(localPlayer.getStandardObjectKey()));
-
-        this.game.getLevel().addPlayer(localPlayer);
-    }
-
     public void startGame() {
         this.game.start();
-    }
-
-    public boolean collidesWithWalls(ICollidable collidable) {
-        for (GameObject object : this.game.getLevel().getObjects()) {
-            if (object instanceof Wall) {
-                Wall wall = (Wall) object;
-
-                if (wall.collidesWith(collidable)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
 	@Override
