@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import cz.kobzol.bulanci.command.util.CommandFactory;
 import cz.kobzol.bulanci.command.util.CommandInvoker;
 import cz.kobzol.bulanci.connection.ConnectionSide;
@@ -17,6 +18,7 @@ import cz.kobzol.bulanci.map.Level;
 import cz.kobzol.bulanci.map.MapLoader;
 import cz.kobzol.bulanci.model.IDrawable;
 import cz.kobzol.bulanci.model.IGameObject;
+import cz.kobzol.bulanci.model.SpriteObject;
 import cz.kobzol.bulanci.player.Player;
 import cz.kobzol.bulanci.util.Files;
 
@@ -32,6 +34,8 @@ public class GameController extends ApplicationAdapter {
 
     private Game game;
 
+    private ShapeRenderer shapeRenderer;
+
     public GameController(ConnectionSide client) {
         this.client = new GameClient(client, this);
     }
@@ -43,6 +47,7 @@ public class GameController extends ApplicationAdapter {
 	@Override
 	public void create() {
 		this.batch = new SpriteBatch();
+        this.shapeRenderer = new ShapeRenderer();
         this.assetManager = this.loadAssets();
 
         Level level = new MapLoader(this).parseLevel(Gdx.files.internal("map_proposal.xml"));
@@ -78,7 +83,7 @@ public class GameController extends ApplicationAdapter {
      */
     private OrthographicCamera createCamera() {
         OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, 1000, 800);
+        camera.setToOrtho(false, 1920, 1080);
 
         return camera;
     }
@@ -123,6 +128,15 @@ public class GameController extends ApplicationAdapter {
             }
 
             batch.end();
+
+            this.shapeRenderer.setProjectionMatrix(this.camera.combined);
+            this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            for (IGameObject object : this.game.getLevel().getObjects()) {
+                if (object instanceof SpriteObject) {
+                    ((SpriteObject) object).drawShape(this.shapeRenderer);
+                }
+            }
+            this.shapeRenderer.end();
         }
 	}
 
